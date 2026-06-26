@@ -747,10 +747,10 @@ git commit -m "feat: native Error subclasses replacing create-error"
 > Each module is a **mechanical, behaviour-preserving transformation** of the matching `lib/*.js` file: copy it to `src/*.ts`, swap `require('bluebird')`→`BPromise`, `require('lodash')`→`internal/lang`, `require('inflection')`→`internal/inflection`, `require('create-error')`/`errors`→`src/errors`, convert `module.exports`/`require` to ESM `import`/`export`, then add types until `strict` passes. The baseline suite (Phase 0) and the ported tests (Phase 4) are the behaviour oracle — **no logic changes**. Where a `_(...)` lodash chain appears, rewrite it to native imperative (see call sites below).
 >
 > **Per-module recipe (identical for every task in this phase):**
-> 1. `git mv lib/<mod>.js src/<mod>.ts` (preserve history) — or copy if base/top share names.
+> 1. **COPY** `lib/<mod>.js` → `src/<mod>.ts` (do NOT `git mv`). **`lib/` stays intact and runnable** so the existing mocha baseline keeps passing through all of Phase 3. `lib/` is deleted only in Phase 4 (Task 4.4) once the Vitest suite points at `src/`.
 > 2. Rewrite imports to ESM + internal modules; remove all four dep imports.
 > 3. Add types; run `pnpm typecheck` until clean (`any` only where commented).
-> 4. Run the relevant ported tests (after Phase 4 they exist; during Phase 3 run `pnpm typecheck` + any already-ported unit test, and rely on Phase 4 to close the loop). Keep `allowJs` so not-yet-ported modules still resolve via their `.js` until ported.
+> 4. Behaviour gate during Phase 3 = `pnpm typecheck` + `pnpm test` (old mocha against untouched `lib/` must stay 732-green — proves we did not disturb the baseline). Per-`src`-module behaviour parity is closed in Phase 4 when Vitest imports from `src/`.
 > 5. Commit per module.
 
 **Port order (dependencies first):**
@@ -819,8 +819,8 @@ git commit -m "feat: native Error subclasses replacing create-error"
 ### Task 4.3: Port integration tests
 - [ ] Convert `test/integration/{relations,relation,json,model,collection,plugin}.js` → `*.test.ts`. Run `pnpm test`. Expected: pass on sqlite, matching baseline describe blocks. Commit.
 
-### Task 4.4: Remove old test runner + deps
-- [ ] Delete the old `test/index.js`, `test/.eslintrc`, and `test/integration/output/*` if obsolete. Run `pnpm remove mocha chai sinon sinon-chai nyc`. Run `pnpm test` (full Vitest). Expected: green, parity with baseline. Commit `test: complete Vitest migration, drop mocha/chai/sinon/nyc`.
+### Task 4.4: Remove old `lib/`, test runner + deps
+- [ ] Confirm Vitest imports only from `src/` and is green. Delete the entire `lib/` directory and the interim `bookshelf.js` entry (superseded by `src/index.ts`). Delete old `test/index.js`, `test/.eslintrc`, and `test/integration/output/*` if obsolete. Run `pnpm remove mocha chai sinon sinon-chai nyc`. Run `pnpm test` (full Vitest). Expected: green, parity with baseline (732 sqlite). Commit `test: complete Vitest migration; drop lib/, mocha/chai/sinon/nyc`.
 
 **Phase 4 gate:** `pnpm test` green; describe-block coverage matches `baseline-results.md`.
 
