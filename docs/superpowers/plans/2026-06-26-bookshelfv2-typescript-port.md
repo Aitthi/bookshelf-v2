@@ -6,7 +6,7 @@
 
 **Architecture:** Keep the original two-layer structure (`base/` framework-agnostic classes + knex-aware top layer). Replace all four runtime deps (`bluebird`, `lodash`, `inflection`, `create-error`) with hand-written `src/internal/*` modules. Public async methods return a hand-written `BPromise` (a native `Promise` subclass that re-adds `.tap/.bind/.map/.return/.spread/.asCallback`) so consumer code keeps working. Port bottom-up, module by module, keeping the existing test suite green as an oracle.
 
-**Tech Stack:** TypeScript (strict), SWC (`@swc/cli` + `@swc/core`) for transpile, `tsc` for `.d.ts` + typecheck, Vitest for tests, ESLint flat config, GitHub Actions. Package manager: **pnpm 9**. Node **>=22** dev / **>=16** consumer floor.
+**Tech Stack:** TypeScript (strict), SWC (`@swc/cli` + `@swc/core`) for transpile, `tsc` for `.d.ts` + typecheck, Vitest for tests, **Biome** (lint + format, replaces ESLint + Prettier), GitHub Actions. Package manager: **pnpm 9**. Node **>=22** dev / **>=16** consumer floor.
 
 ## Global Constraints
 

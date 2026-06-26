@@ -182,8 +182,8 @@ orm.plugin(virtuals)        // ส่ง function เข้าไปตรงๆ
 ### CI: GitHub Actions
 - แทน `.travis.yml` ด้วย workflow ใน `.github/workflows/` : typecheck + lint + test (matrix node 18/20/22) + build smoke test
 
-### Lint
-- ESLint flat config (`eslint.config.js`) + `@typescript-eslint` + prettier; ลบ `.eslintrc.json` เดิม
+### Lint + Format
+- **Biome** (`biome.json`) — Rust binary ตัวเดียวแทนทั้ง ESLint + Prettier; เร็ว, ตัด devDeps หลายตัว, ไม่มีข้อจำกัด Node engine (ต่างจาก eslint 10 ที่ตัด Node 18). ลบ `.eslintrc.json`/`.prettierrc` เดิม. scripts: `lint`/`format`/`check`
 
 ---
 

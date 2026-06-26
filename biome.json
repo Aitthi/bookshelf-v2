@@ -6,7 +6,10 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"includes": ["src/**", "test/**/*.ts"]
+		"includes": [
+			"src/**",
+			"test/**/*.ts"
+		]
 	},
 	"formatter": {
 		"enabled": true,
@@ -17,7 +20,7 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"preset": "recommended"
+			"recommended": true
 		}
 	},
 	"javascript": {
