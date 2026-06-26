@@ -215,8 +215,10 @@ function Bookshelf(knex: any): any {
           try {
             columnNames[0] = resolveModel(columnNames[0]);
           } catch (error) {
-            // If it did not work, they were real columnNames
-            if (error instanceof errors.ModelNotResolvedError) throw error;
+            // If resolution failed with ModelNotResolvedError, columnNames[0] was a real
+            // column name, not a model — swallow and treat columnNames as actual column names.
+            // (Re-throw anything unexpected.)
+            if (!(error instanceof errors.ModelNotResolvedError)) throw error;
           }
         }
 
