@@ -3,6 +3,7 @@ import { vi } from 'vitest';
 import assert from 'node:assert';
 import knex from 'knex';
 import bookshelfFactory from '../../src/index';
+import BookshelfModel from '../../src/model';
 
 describe('Bookshelf', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,7 +96,10 @@ describe('Bookshelf', () => {
     });
 
     it('can be used in morphTo() relations', () => {
-      const morphToSpy = vi.spyOn(bookshelf.Model.prototype, 'morphTo');
+      // Spy on the BASE BookshelfModel.prototype.morphTo — the function the wrapper
+      // delegates to AFTER resolving string model names. This matches what the mocha
+      // test does: sinon.spy(require('../../lib/model').prototype, 'morphTo').
+      const morphToSpy = vi.spyOn(BookshelfModel.prototype, 'morphTo');
 
       try {
         // Wrap in try/catch because Bookshelf evaluates morph targets and we
