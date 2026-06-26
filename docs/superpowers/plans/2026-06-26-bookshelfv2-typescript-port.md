@@ -755,6 +755,10 @@ git commit -m "feat: native Error subclasses replacing create-error"
 
 **Port order (dependencies first):**
 
+> **CORRECTED ORDER (discovered during execution):** the dependency graph is a DAG (no cycles — `model`/`collection` are imported only by `bookshelf`). The original task numbering below was NOT a valid topological sort (e.g. `helpers` imports `base/model` but was listed before it; `base/relation` imports `base/collection` but was listed before it). A module can only be ported after every `src` file it imports exists, so the actual execution order is:
+> `constants → extend → errors(done in 2.4) → sync → base/events → base/eager → base/model → base/collection → base/relation → helpers → eager → relation → collection → model → bookshelf → index`
+> The task headings below keep their original numbers for reference, but are executed in the corrected order above.
+
 ### Task 3.1: `constants.ts`
 - [ ] Port `lib/constants.js` → `src/constants.ts`. Run `pnpm typecheck`. Commit `refactor: port constants to TS`.
 
