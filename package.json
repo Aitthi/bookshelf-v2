@@ -7,7 +7,10 @@
     "format": "prettier --write \"{lib,scripts,test}/**/*.js\"",
     "lint": "eslint bookshelf.js lib/",
     "cover": "npm run lint && nyc mocha --check-leaks -t 10000 -b",
-    "test": "mocha --check-leaks -t 10000 -b",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
+    "test:mocha": "mocha --check-leaks -t 10000 -b",
     "typecheck": "tsc --noEmit",
     "jsdoc": "./scripts/jsdoc.sh",
     "postpublish": "./scripts/postpublish.sh",
@@ -51,6 +54,7 @@
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.43",
     "@types/node": "^26.0.1",
+    "@vitest/coverage-v8": "^4.1.9",
     "bookshelf-jsdoc-theme": "^1.0.1",
     "chai": "^4.0.0",
     "eslint": "^9.3.0",
@@ -69,7 +73,8 @@
     "sinon-chai": "^3.7.0",
     "sqlite3": "^5.1.7",
     "typescript": "^6.0.3",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "vitest": "^4.1.9"
   },
   "peerDependencies": {
     "knex": ">=3.1.0"
