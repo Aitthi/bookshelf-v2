@@ -1,22 +1,13 @@
 // Bookshelf.js
 // ---------------
 
-// NOTE: import.meta.url is used below for createRequire. Under the ESM build
-// this is correct. If SWC transpiles to CJS for dist/, import.meta.url may not
-// be available and the generic string-plugin branch will throw at runtime.
-// That is a Phase 6 packaging concern — flagged here for the controller.
 import { createRequire } from 'node:module';
-
-// NOTE: resolveJsonModule must be true in tsconfig for this import to resolve.
-// The relative path '../package.json' resolves correctly from src/ (→ repo root)
-// and from dist/ (→ repo root, one level above dist/). Flagged as a packaging
-// concern in case the dist layout changes in Phase 6.
-import pkg from '../package.json';
 
 // We've supplemented `Events` with a `triggerThen` method to allow for
 // asynchronous event handling via promises. We also mix this into the
 // prototypes of the main objects in the library.
 import Events from './base/events';
+import { VERSION } from './version';
 
 // All core modules required for the bookshelf instance.
 import BookshelfModel from './model';
@@ -25,10 +16,6 @@ import BookshelfRelation from './relation';
 import * as errors from './errors';
 
 import { isPlainObject, isFunction, isString, result, extend } from './internal/lang';
-
-// Used in the string-form plugin() branch: ESM has no synchronous require(),
-// so createRequire bridges the gap. See FLAG above about import.meta.url.
-const requirePlugin = createRequire(import.meta.url);
 
 function preventOverwrite(store: Record<string, unknown>, name: string): void {
   if (store[name]) throw new Error(`${name} is already defined in the registry`);
@@ -75,7 +62,7 @@ function Bookshelf(knex: any): any {
       collections: {} as Record<string, unknown>,
       models: {} as Record<string, unknown>,
     },
-    VERSION: pkg.version,
+    VERSION,
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     collection(name: string, Collection?: any, staticProperties?: any): any {
@@ -573,7 +560,16 @@ function Bookshelf(knex: any): any {
           return console.warn(message); // eslint-disable-line no-console
         }
 
-        requirePlugin(plugin)(this, options);
+        // Lazy, dual-build-safe require for string-path plugins.
+        // In CJS runtime (dist/cjs), native require is always available — we use it
+        // directly. import.meta.url is never evaluated in this path.
+        // In ESM runtime (dist/esm), createRequire is called lazily here.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const _requireFn: (id: string) => any =
+          typeof require === 'function'
+            ? require // CJS: native require
+            : createRequire(import.meta.url); // ESM: lazy, import.meta.url only here
+        _requireFn(plugin)(this, options);
       } else if (Array.isArray(plugin)) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         plugin.forEach((p: any) => {
