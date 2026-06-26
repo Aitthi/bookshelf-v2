@@ -1,0 +1,735 @@
+        ✔ should fail without a knex instance
+        ✔ should fail if passing a random object
+        ✔ can access registered models through collection methods
+        ✔ can access registered collections through collection methods
+        ✔ passes the registered model name to the relation method
+        ✔ throws a ModelNotResolved error for nonexistent relations
+        ✔ can be used in through() relations
+        ✔ can be used in morphTo() relations
+        ✔ should equal version number in package.json
+        ✔ registers a collection
+        ✔ returns a previously registered collection if passing a string
+        ✔ preserves instance properties
+        ✔ returns undefined if the specified collection is not found
+        ✔ throws when trying to register an already registered collection name
+        ✔ registers a model
+        ✔ returns a previously registered model if passing a string
+        ✔ preserves instance properties
+        ✔ preserves class properties
+        ✔ throws when trying to register an already registered model name
+        ✔ returns undefined if the specified model is not found
+        ✔ can be used to resolve models with a custom function
+        ✔ returns undefined if no model is resolved
+      ✔ should have a tableName method that returns the tableName of the model
+      ✔ should be iterable
+      ✔ should have an idAttribute method, returning the idAttribute of the model
+      ✔ should initialize the items passed to the constructor
+      ✔ should use the `reset` method, to reset the collection
+      ✔ should use _prepareModel to prep model instances
+      ✔ contains a mapThen method which calls map on the models and returns a when.all promise
+      ✔ contains an invokeThen method which does an invoke on the models and returns a when.all promise
+        ✔ adds new models to the collection
+        ✔ ignores duplicate models by default
+        ✔ merges duplicate models when the merge option is set
+        ✔ Ignores the remove option when it's set to true
+        ✔ Ignores the add option when it's set to false and still adds new models
+        ✔ returns the first element in the collection
+        ✔ returns undefined if the collection is empty
+        ✔ returns the last element in the collection
+        ✔ returns undefined if the collection is empty
+        ✔ should accept a single object as argument
+        ✔ should accept Models as argument
+        ✔ should delete old models and add new ones by default
+        ✔ should delete old models and add new ones with similar binary IDs
+        ✔ should merge duplicate models by default
+        ✔ should merge duplicate models in the new set
+        ✔ should not remove models with {remove: false} option set
+        ✔ should not merge new attribute values with {merge: false} option set
+        ✔ should add duplicate models if both the remove and merge options are false
+        ✔ should not add models with {add: false} option set
+        ✔ should support large arrays (360ms)
+        ✔ should only deregister the provided callback if passed
+        ✔ should deregister all callbacks if no callback is passed
+        ✔ should deregister multiple space-separated events
+        ✔ should pass additional arguments to the listener
+        ✔ should remove itself but not other events
+      ✔ accepts a withSchema option
+      ✔ accepts a lock option option if called with a transaction
+      ✔ ignores the lock option if called without a transaction
+        ✔ should prefix all keys of the passed in object with the tablename
+        ✔ should run after format for select
+        ✔ should format attributes for updates, including id attribute
+        ✔ should format id attribute for deletes
+        ✔ doesn't try to update the primary key if it hasn't changed
+        ✔ will update the primary key if it has changed
+        ✔ should clone the passed in `options` object
+          ✔ should not call model.parse with a non-object argument
+          ✔ should merge the updated attributes on the existing model
+          ✔ should not call model.parse with a non-object argument
+        ✔ will set the updated_at and the created_at attributes to a new date for new models
+        ✔ will not set the created_at attribute to a new date for existing models
+        ✔ will set the created_at attribute when inserting new models with a predefined id value
+        ✔ will not set timestamps on a model if hasTimestamps isn't set
+        ✔ includes the idAttribute in the hash
+        ✔ includes the relations loaded on the model
+        ✔ ignores the model's "hidden" and "visible" properties with the "options.visibility" argument
+          ✔ doesn't include the relations loaded on the model if {shallow: true} is passed
+          ✔ does not omit new models from collections and relations when {omitNew: false} is passed
+          ✔ does not omit new models from collections and relations when omitNew is not specified
+          ✔ omits new models from collections and relations when {omitNew: true} is passed
+          ✔ returns null for a new model when {omitNew: true} is passed
+          ✔ only shows the fields specified in the model's "visible" property
+          ✔ only shows the fields specified in the "options.visible" property
+          ✔ allows overriding the model's "visible" property with a "options.visible" argument
+          ✔ hides the fields specified in the model's "hidden" property
+          ✔ hides the fields specified in the "options.hidden" property
+          ✔ prioritizes "hidden" if there are conflicts when using both "hidden" and "visible"
+          ✔ prioritizes "options.hidden" if there are conflicts when using both "options.hidden" and "options.visible"
+          ✔ allows overriding the model's "hidden" property with a "options.hidden" argument
+          ✔ prioritizes "options.hidden" when overriding both the model's "hidden" and "visible" properties with "options.hidden" and "options.visible" arguments
+          ✔ serializes correctly
+          ✔ serializes correctly when placed as object property
+          ✔ serializes correctly when placed in an array
+        ✔ returns true if an attribute was set on a new model instance
+        ✔ returns false if the attribute isn't set on a new model instance
+        ✔ returns false if the attribute isn't updated after a sync operation
+        ✔ returns true if an existing attribute is updated
+    ✔ should allow creating a new Bookshelf instance with "new"
+    ✔ should allow swapping in another knex instance
+            ✔ contains all the attributes set on the model as the second argument
+            ✔ contains all the attributes set on the model as the second argument
+            ✔ contains only the attributes passed to save() as the second argument if using the patch: true option
+            ✔ passes the collection as first argument to the listener
+            ✔ passes the column definitions to fetch as second argument to the listener
+            ✔ passes options as third argument to the listener
+            ✔ passes the collection as first argument to the listener
+            ✔ passes the fetched columns as second argument to the listener
+            ✔ passes options as third argument to the listener
+          ✔ can be extended
+          ✔ accepts a custom `constructor` property
+          ✔ initializes an empty object for storing changed attributes
+            ✔ NotFoundError
+            ✔ NoRowsUpdatedError
+            ✔ NoRowsDeletedError
+          ✔ should create a new model instance
+          ✔ should attach the id as a property on the model
+          ✔ should reference idAttribute as the key for model.id
+          ✔ #id should be set when model has custom parse method
+            ✔ resolves to null if no record exists and the {require: false} model option is set
+            ✔ allows overriding the model level {require: false} option
+            ✔ rejects with NotFoundError by default
+            ✔ allows overriding the default Model level option
+            ✔ resolves to null if no record exists and the {require: false} model option is set
+            ✔ is not affected by the model level {require: true} option
+          ✔ returns the Knex builder when no arguments are passed
+          ✔ calls Knex builder method with the first argument, returning the model
+          ✔ passes along additional arguments to the Knex method in the first argument
+          ✔ allows passing an object to query
+          ✔ allows passing a function to query
+          ✔ can be passed in the initialize options
+          ✔ should set the tableName for the query builder
+          ✔ parses the model attributes on fetch
+          ✔ doesn't parse the model attributes on creation
+          ✔ parses the model attributes on creation if {parse: true} is passed
+          ✔ calls format when saving
+          ✔ does not mutate attributes on format
+          ✔ will fetch a record by present attributes without an ID attribute
+          ✔ will update a model's attributes by fetching only by `idAttribute`
+          ✔ issues a first (get one) to Knex, triggering a fetched event, returning a promise
+          ✔ has a fetching event, which will fail if an error is thrown or if a rejected promise is provided
+          ✔ allows access to the query builder on the options object in the fetching event
+          ✔ does not fail, when joining another table having some columns with the same names - #176
+          ✔ allows specification of select columns as an `options` argument
+          ✔ allows specification of select columns in query callback
+          ✔ will still select default columns if `distinct` is called without columns - #807
+          ✔ rejects with an error if no record exists
+          ✔ resolves to null if no record exists and the {require: false} option is passed
+          ✔ locks the table when called with the forUpdate option during a transaction (105ms)
+          ✔ locks the table when called with the forShare option during a transaction (105ms)
+          ✔ does not try to format the idAttribute if it's already formatted
+          ✔ formats the idAttribute if it's not already formatted
+          ✔ triggers `fetching:collection` and `fetched:collection` events
+          ✔ should load models with duplicate ids when the merge and remove options are false
+          ✔ should merge models with duplicate ids by default
+          ✔ returns an empty collection if there are no results
+          ✔ fetches a single page of results with defaults
+          ✔ fetches a single page of results without returning rowCount or pageCount
+          ✔ returns an empty collection if there are no results
+          ✔ returns an empty collection with the {require: false} option if there are no results
+          ✔ returns the limit and offset instead of page and pageSize
+          ✔ fetches a page of results with specified page size
+          ✔ fetches a page with specified offset
+          ✔ fetches a page by page number
+          ✔ fetches a page when other columns are specified on the original query
+          ✔ returns correct values for rowCount and pageCount when hasTimestamps is used
+            ✔ returns consistent results for rowCount and number of models
+            ✔ counts grouped rows instead of total rows
+            ✔ counts grouped rows when using table name qualifier
+            ✔ counts distinct occurences of a column instead of total rows
+            ✔ ignores standard options for count query
+            ✔ keeps custom options for count query
+          ✔ fetches a page without having to call .forge() manually
+          ✔ returns results in the correct order
+          ✔ returns DESC order results with a minus sign
+          ✔ saves a new object
+          ✔ saves all attributes that are currently set on the model plus the ones passed as argument
+          ✔ ensure events are triggered sequentially when the handlers do async stuff (203ms)
+          ✔ updates an existing object
+          ✔ allows passing a method to save, to call insert or update explicitly
+          ✔ errors if the row was not updated
+          ✔ does not error if the row was not updated but require is false
+          ✔ should not error if updated row was not affected
+          ✔ does not constrain on the `id` during update unless defined
+          ✔ allows {patch: true} as an option for only updating passed data
+          ✔ fires saving and creating and then saves
+          ✔ fires saving and then creating triggers
+          ✔ refreshes the model after updating
+          ✔ refreshes the model after inserting
+          ✔ does not refresh the model if {autoRefresh: false} option is passed
+          ✔ does not trigger a "fetched" event after refreshing the model
+          ✔ rejects if the saving event throws an error
+          ✔ Allows setting a uuid, #24 #130
+          ✔ passes custom `options` passed to `timestamp()` - #881
+          ✔ will not break with prefixed id, #583
+          ✔ issues a delete to the Knex, returning a promise
+          ✔ fails if no idAttribute or wheres are defined on the model
+          ✔ triggers a destroying event on the model
+          ✔ will not destroy the model if an error is thrown during the destroying event
+          ✔ allows access to the query builder on the options object in the destroying event
+          ✔ will throw an error when trying to destroy a non-existent object
+          ✔ will not throw an error when trying to destroy a non-existent object with {require: false}
+          ✔ counts the number of models in a collection
+          ✔ optionally counts by column (excluding null values)
+          ✔ counts a filtered query
+          ✔ resets query after completing
+          ✔ deletes the `_builder` property, resetting the model query builder
+          ✔ allows passing hasTimestamps in the options hash of model instantiation
+          ✔ allows custom keys for the created and updated values
+          ✔ will accept a falsy value as an option for the updated key name to ignore it
+          ✔ will not set an attribute named "null" when passing a literal null as a key name
+          ✔ will accept a falsy value as an option for the created key to ignore it
+          ✔ will not set timestamps on the model if the associated columns are ommitted in fetch
+            ✔ is the same between saving and fetching models
+            ✔ is the same between saving and fetching all models
+            ✔ is the same after updating model
+            ✔ is the same for eager loaded related items
+            ✔ is the same for related items
+            ✔ does not update created_at when {method: "update"} is passed as option to save
+            ✔ does not update created_at timestamp if the user doesn't set it (1004ms)
+            ✔ will automatically set the updated_at timestamp if the user doesn't set it (1004ms)
+            ✔ will not update the updated_at timestamp if the model hasn't changed (1004ms)
+            ✔ will set the updated_at timestamp to the user supplied value
+            ✔ will not change the existing created_at timestamp if user doesn't set a value for it
+            ✔ will set the created_at timestamp to the user supplied value
+            ✔ saves correct attributes when modified inside event hook
+            ✔ sets created_at and updated_at when {method: "insert"} is passed as option
+            ✔ will set the created_at and updated_at columns if true
+            ✔ sets created_at to the user specified value if present in the model's attributes
+            ✔ sets updated_at to the user specified value if present in the model's attributes
+            ✔ will set the timestamps columns to provided time in date option
+          ✔ assigns defaults on save, rather than initialize
+          ✔ only assigns defaults when creating a model, unless {defaults: true} is passed in the save options
+          ✔ creates a new instance of Sync
+          ✔ uses the idAttribute to determine if the model isNew
+          ✔ returns undefined for attributes that have not been set, fetched or saved yet
+          ✔ returns undefined for attributes that have been set if the model hasn't been synced yet
+          ✔ returns the previous value of an attribute the last time it was synced
+          ✔ returns the current value of an attribute if it hasn't been changed
+          ✔ returns undefined if no attribute name is supplied
+          ✔ returns the model's current attributes if no attributes were changed after fetch
+          ✔ returns the model's current attributes if no attributes were changed after fetching collection
+          ✔ returns the model's current attributes if no attributes were changed after save
+          ✔ returns the model's original attributes if the model has changed
+          ✔ returns a model's original attributes if a model in a collection has changed
+          ✔ returns the model's original attributes after save
+          ✔ returns the model's original attributes after save on the 'updated' event
+          ✔ returns the model's current attributes after save without changes on the 'updated' event
+          ✔ returns the model's current attributes after save without changes on the 'updated' event with a collection
+          ✔ returns the model's original attributes after destroy
+          ✔ returns an empty object if no model data has been fetched yet
+          ✔ returns the model's current attributes when the model is eager loaded without changes
+          ✔ returns the model's original attributes when the model is eager loaded
+          ✔ returns true if passing an attribute name that has changed since the last sync
+          ✔ returns false if passing an attribute name that has not changed since the last sync
+          ✔ returns true if no arguments are provided and an attribute of the model has changed
+          ✔ returns false if no arguments are provided and the model hasn't changed
+          ✔ returns false if attribute is changed and then changed again to the initial value
+          ✔ returns false after an attribute is changed and the model is saved
+          ✔ creates a new collection for the current model
+          ✔ counts the number of matching records in the database
+          ✔ event.once return a promise
+          ✔ should be equivalent when cloned
+          ✔ should contain a copy of internal QueryBuilder object - #945
+          ✔ should default to insert for new model
+          ✔ should default to update for non-new model
+          ✔ should normalize to lowercase
+          ✔ should always update on patch
+          ✔ should have own EmptyError
+          ✔ counts the number of models in a collection
+          ✔ optionally counts by column (excluding null values)
+          ✔ counts a filtered query
+          ✔ counts a `hasMany` relation
+          ✔ counts a `hasMany` `through` relation
+          ✔ fetches the models in a collection
+          ✔ returns an empty collection if no models can be fetched
+          ✔ throws an error if no models can be fetched with the require option
+          ✔ fetches a page from a collection
+          ✔ fetches a page from a relation collection
+          ✔ fetches a page from a relation collection with additional condition
+          ✔ fetches a single model from the collection
+          ✔ maintains a clone of the query builder from the current collection
+          ✔ rejects with an error if no record exists
+          ✔ resolves to null with the {require: false} option if no model exists
+          ✔ orders the results by column in ascending order
+          ✔ orders the results by column in descending order
+          ✔ orders the results in ascending order when chained with fetchPage()
+          ✔ orders the results in descending order when chained with fetchPage()
+          ✔ creates and saves a new model instance, saving it to the collection
+          ✔ should populate a `hasMany` or `morphMany` with the proper keys
+          ✔ should not set incorrect foreign key in a `hasMany` `through` relation - #768
+          ✔ should automatically create a join model when joining a belongsToMany
+          ✔ should populate the nested relations with the proper keys
+          ✔ can require items in the response
+          ✔ correctly parses added relation keys
+          ✔ should contain a copy of internal QueryBuilder object - #945
+          ✔ constrains the fetch call with the specified query conditions
+          ✔ can constrain the fetch call with the "key, comparator, value" type conditions
+            ✔ handles belongsTo (blog, site)
+            ✔ handles hasMany (posts)
+            ✔ handles hasOne (meta)
+            ✔ handles belongsToMany (posts)
+            ✔ eager loads "hasOne" relationships correctly (site -> meta)
+            ✔ does not load "hasOne" relationship when it doesn't exist (site -> meta)
+            ✔ eager loads "hasMany" relationships correctly (site -> authors, blogs)
+            ✔ eager loads "hasMany" relationships when children have duplicate ids
+            ✔ eager loads "belongsTo" relationships correctly (blog -> site)
+            ✔ does not load "belongsTo" relationship when foreignKey is null (blog -> site) #1299
+            ✔ throws an error if you try to fetch a related object without the necessary key
+            ✔ eager loads "belongsToMany" models correctly (post -> tags)
+            ✔ attaches an empty related model or collection if the `EagerRelation` comes back blank
+            ✔ maintains eager loaded column specifications, #510
+            ✔ can load relations when foreign key is 0
+            ✔ throws an error on undefined first withRelated relations
+            ✔ throws an error on undefined non-first withRelated relations
+            ✔ is possible to add withRelated in events
+              ✔ withRelated option
+              ✔ load() method
+            ✔ eager loads "hasOne" models correctly (sites -> meta)
+            ✔ eager loads "belongsTo" models correctly (blogs -> site) including #1299
+            ✔ eager loads "hasMany" models correctly (site -> blogs)
+            ✔ eager loads "belongsToMany" models correctly (posts -> tags)
+            ✔ eager loads "belongsToMany" models correctly and parent is not undefined
+            ✔ when parent model has custom id attribute and a parse method that mutates it
+            ✔ eager loads "hasMany" -> "hasMany" (site -> authors.ownPosts)
+            ✔ eager loads "hasMany" -> "belongsToMany" (site -> authors.posts)
+            ✔ does multi deep eager loads (site -> authors.ownPosts, authors.site, blogs.posts)
+            ✔ eager loads "hasMany" -> "hasMany" (sites -> authors.ownPosts)
+            ✔ eager loads relations on a populated model (site -> blogs, authors.site)
+            ✔ eager loads attributes on a collection (sites -> blogs, authors.site)
+            ✔ attaching event get's triggered
+            ✔ creating event get's triggered
+            ✔ has an attaching event, which will fail if an error is thrown
+            ✔ has an detaching event, which will fail if an error is thrown
+            ✔ provides "attach" for creating or attaching records
+            ✔ keeps the attach method for eager loaded relations, #120
+            ✔ can attach `belongsToMany` relation to models eager loaded with `fetchAll`, #629
+            ✔ keeps the pivotal helper methods when cloning a collection having `relatedData` with `type` "belongsToMany", #1197
+            ✔ updates all rows inside the pivot table belonging to the current model
+            ✔ updates all rows, which match the passed in query-criteria
+            ✔ throws an error if no columns are updated and `require: true` is passed as option
+            ✔ works with many-to-many (user -> roles)
+            ✔ works with eager loaded many-to-many (user -> roles)
+            ✔ handles morphOne (photo)
+            ✔ handles morphMany (photo)
+            ✔ handles morphTo with custom morphValue (imageable "authors")
+            ✔ handles morphTo (imageble "authors", PhotoParsed)
+            ✔ has no side effects for morphTo (imageable "authors", PhotoParsed)
+            ✔ handles morphTo (imageable "sites")
+            ✔ eager loads morphMany (sites -> photos)
+            ✔ eager loads morphTo (photos -> imageable)
+            ✔ eager loads beyond the morphTo, where possible
+            ✔ handles morphOne with custom columnNames (thumbnail)
+            ✔ handles morphMany with custom columnNames (thumbnail)
+            ✔ handles morphTo with custom columnNames (imageable "authors")
+            ✔ handles morphTo with custom columnNames (imageable "sites")
+            ✔ eager loads morphMany with custom columnNames (sites -> thumbnails)
+            ✔ eager loads morphTo with custom columnNames (thumbnails -> imageable)
+            ✔ eager loads beyond the morphTo with custom columnNames, where possible
+            ✔ throws an error if the type attribute is not defined
+            ✔ throws an error if the type attribute is not one of the expected types
+            ✔ handles hasMany `through`
+            ✔ eager loads hasMany `through`
+            ✔ eager loads hasMany `through` using where / fetchAll
+            ✔ handles hasOne `through`
+            ✔ eager loads hasOne `through`
+            ✔ eager loads belongsToMany `through`
+            ✔ eager loads belongsTo `through`
+          ✔ should return Customer (id=1) with settings
+          ✔ should return Customer (id=4) with settings
+          ✔ #65 - should eager load correctly for models
+          ✔ #65 - should eager load correctly for collections
+          ✔ doesnt pass the columns along to sub-queries
+          ✔ maintains the correct parent model references when using related()
+          ✔ correctly pairs eager-loaded models before parse()
+          ✔ parses eager-loaded models after pairing
+          ✔ parses eager-loaded models previous attributes after pairing
+          ✔ parses eager-loaded morphTo relations (model)
+          ✔ eager fetches belongsTo correctly on a dual parse
+          ✔ eager fetches belongsTo correctly on a dual parse
+          ✔ should not run a query for eagerly loaded `belongsTo` relations if the foreign key is null
+          ✔ should not run a query for eagerly loaded `morphTo` relations if the foreign key is null
+          ✔ should not set the foreign key on the target model when saving
+          ✔ should trigger pivot model lifecycle event: creating
+          ✔ should trigger pivot model lifecycle event: created
+          ✔ should trigger pivot model lifecycle event: saving
+          ✔ should trigger pivot model lifecycle event: saved
+          ✔ should trigger pivot model lifecycle event: fetching
+          ✔ should trigger pivot model lifecycle event: fetched
+          ✔ should trigger pivot model lifecycle event: updating
+          ✔ should trigger pivot model lifecycle event: updated
+          ✔ should trigger pivot model lifecycle event: destroying
+          ✔ should trigger pivot model lifecycle event: destroyed
+          ✔ works with hasOne relation (locale -> translation)
+          ✔ works with eager loaded hasOne relation (locale -> translation)
+          ✔ works with hasOne `through` relation (customer -> locale)
+          ✔ works with eager loaded hasOne `through` relation (customer -> locale)
+          ✔ works with hasMany relation (locale -> translations)
+          ✔ works with eager loaded hasMany relation (locale -> translations)
+          ✔ works with hasMany `through` relation (customer -> locales)
+          ✔ works with eager loaded hasMany `through` relation (customer -> locales)
+          ✔ works with belongsTo relation (translation -> locale)
+          ✔ works with eager loaded belongsTo relation (translation -> locale)
+          ✔ works with belongsTo `through` relation (locale -> customer)
+          ✔ works with eager loaded belongsTo `through` relation (locale -> customer)
+          ✔ works with belongsToMany relation (locale -> customers)
+          ✔ works with eager loaded belongsToMany relation (locale -> customers)
+          ✔ works with belongsToMany `through` relation (locale -> customers)
+          ✔ works with eager belongsToMany `through` relation (locale -> customers)
+          ✔ should group relations properly with binary ID columns
+          ✔ should correctly set query on fetching with morphTo
+        ✔ can be the path to a plugin
+        ✔ can be an array of plugins
+        ✔ can be a function
+        ✔ returns the Bookshelf instance for chaining
+        ✔ can modify the `Collection` model returned by `Model#collection`
+        ✔ can modify the `Collection` model used by relations
+            ✔ contains all the attributes set on the model as the second argument
+            ✔ contains all the attributes set on the model as the second argument
+            ✔ contains only the attributes passed to save() as the second argument if using the patch: true option
+            ✔ passes the collection as first argument to the listener
+            ✔ passes the column definitions to fetch as second argument to the listener
+            ✔ passes options as third argument to the listener
+            ✔ passes the collection as first argument to the listener
+            ✔ passes the fetched columns as second argument to the listener
+            ✔ passes options as third argument to the listener
+          ✔ can be extended
+          ✔ accepts a custom `constructor` property
+          ✔ initializes an empty object for storing changed attributes
+            ✔ NotFoundError
+            ✔ NoRowsUpdatedError
+            ✔ NoRowsDeletedError
+          ✔ should create a new model instance
+          ✔ should attach the id as a property on the model
+          ✔ should reference idAttribute as the key for model.id
+          ✔ #id should be set when model has custom parse method
+            ✔ resolves to null if no record exists and the {require: false} model option is set
+            ✔ allows overriding the model level {require: false} option
+            ✔ rejects with NotFoundError by default
+            ✔ allows overriding the default Model level option
+            ✔ resolves to null if no record exists and the {require: false} model option is set
+            ✔ is not affected by the model level {require: true} option
+          ✔ returns the Knex builder when no arguments are passed
+          ✔ calls Knex builder method with the first argument, returning the model
+          ✔ passes along additional arguments to the Knex method in the first argument
+          ✔ allows passing an object to query
+          ✔ allows passing a function to query
+          ✔ can be passed in the initialize options
+          ✔ should set the tableName for the query builder
+          ✔ parses the model attributes on fetch
+          ✔ doesn't parse the model attributes on creation
+          ✔ parses the model attributes on creation if {parse: true} is passed
+          ✔ calls format when saving
+          ✔ does not mutate attributes on format
+          ✔ will fetch a record by present attributes without an ID attribute
+          ✔ will update a model's attributes by fetching only by `idAttribute`
+          ✔ issues a first (get one) to Knex, triggering a fetched event, returning a promise
+          ✔ has a fetching event, which will fail if an error is thrown or if a rejected promise is provided
+          ✔ allows access to the query builder on the options object in the fetching event
+          ✔ does not fail, when joining another table having some columns with the same names - #176
+          ✔ allows specification of select columns as an `options` argument
+          ✔ allows specification of select columns in query callback
+          ✔ will still select default columns if `distinct` is called without columns - #807
+          ✔ rejects with an error if no record exists
+          ✔ resolves to null if no record exists and the {require: false} option is passed
+          ✔ locks the table when called with the forUpdate option during a transaction (102ms)
+          ✔ locks the table when called with the forShare option during a transaction (103ms)
+          ✔ does not try to format the idAttribute if it's already formatted
+          ✔ formats the idAttribute if it's not already formatted
+          ✔ triggers `fetching:collection` and `fetched:collection` events
+          ✔ should load models with duplicate ids when the merge and remove options are false
+          ✔ should merge models with duplicate ids by default
+          ✔ returns an empty collection if there are no results
+          ✔ fetches a single page of results with defaults
+          ✔ fetches a single page of results without returning rowCount or pageCount
+          ✔ returns an empty collection if there are no results
+          ✔ returns an empty collection with the {require: false} option if there are no results
+          ✔ returns the limit and offset instead of page and pageSize
+          ✔ fetches a page of results with specified page size
+          ✔ fetches a page with specified offset
+          ✔ fetches a page by page number
+          ✔ fetches a page when other columns are specified on the original query
+          ✔ returns correct values for rowCount and pageCount when hasTimestamps is used
+            ✔ returns consistent results for rowCount and number of models
+            ✔ counts grouped rows instead of total rows
+            ✔ counts grouped rows when using table name qualifier
+            ✔ counts distinct occurences of a column instead of total rows
+            ✔ ignores standard options for count query
+            ✔ keeps custom options for count query
+          ✔ fetches a page without having to call .forge() manually
+          ✔ returns results in the correct order
+          ✔ returns DESC order results with a minus sign
+          ✔ saves a new object
+          ✔ saves all attributes that are currently set on the model plus the ones passed as argument
+          ✔ ensure events are triggered sequentially when the handlers do async stuff (202ms)
+          ✔ updates an existing object
+          ✔ allows passing a method to save, to call insert or update explicitly
+          ✔ errors if the row was not updated
+          ✔ does not error if the row was not updated but require is false
+          ✔ should not error if updated row was not affected
+          ✔ does not constrain on the `id` during update unless defined
+          ✔ allows {patch: true} as an option for only updating passed data
+          ✔ fires saving and creating and then saves
+          ✔ fires saving and then creating triggers
+          ✔ refreshes the model after updating
+          ✔ refreshes the model after inserting
+          ✔ does not refresh the model if {autoRefresh: false} option is passed
+          ✔ does not trigger a "fetched" event after refreshing the model
+          ✔ rejects if the saving event throws an error
+          ✔ Allows setting a uuid, #24 #130
+          ✔ passes custom `options` passed to `timestamp()` - #881
+          ✔ will not break with prefixed id, #583
+          ✔ issues a delete to the Knex, returning a promise
+          ✔ fails if no idAttribute or wheres are defined on the model
+          ✔ triggers a destroying event on the model
+          ✔ will not destroy the model if an error is thrown during the destroying event
+          ✔ allows access to the query builder on the options object in the destroying event
+          ✔ will throw an error when trying to destroy a non-existent object
+          ✔ will not throw an error when trying to destroy a non-existent object with {require: false}
+          ✔ counts the number of models in a collection
+          ✔ optionally counts by column (excluding null values)
+          ✔ counts a filtered query
+          ✔ resets query after completing
+          ✔ deletes the `_builder` property, resetting the model query builder
+          ✔ allows passing hasTimestamps in the options hash of model instantiation
+          ✔ allows custom keys for the created and updated values
+          ✔ will accept a falsy value as an option for the updated key name to ignore it
+          ✔ will not set an attribute named "null" when passing a literal null as a key name
+          ✔ will accept a falsy value as an option for the created key to ignore it
+          ✔ will not set timestamps on the model if the associated columns are ommitted in fetch
+            ✔ is the same between saving and fetching models
+            ✔ is the same between saving and fetching all models
+            ✔ is the same after updating model
+            ✔ is the same for eager loaded related items
+            ✔ is the same for related items
+            ✔ does not update created_at when {method: "update"} is passed as option to save
+            ✔ does not update created_at timestamp if the user doesn't set it (1002ms)
+            ✔ will automatically set the updated_at timestamp if the user doesn't set it (1008ms)
+            ✔ will not update the updated_at timestamp if the model hasn't changed (1005ms)
+            ✔ will set the updated_at timestamp to the user supplied value
+            ✔ will not change the existing created_at timestamp if user doesn't set a value for it
+            ✔ will set the created_at timestamp to the user supplied value
+            ✔ saves correct attributes when modified inside event hook
+            ✔ sets created_at and updated_at when {method: "insert"} is passed as option
+            ✔ will set the created_at and updated_at columns if true
+            ✔ sets created_at to the user specified value if present in the model's attributes
+            ✔ sets updated_at to the user specified value if present in the model's attributes
+            ✔ will set the timestamps columns to provided time in date option
+          ✔ assigns defaults on save, rather than initialize
+          ✔ only assigns defaults when creating a model, unless {defaults: true} is passed in the save options
+          ✔ creates a new instance of Sync
+          ✔ uses the idAttribute to determine if the model isNew
+          ✔ returns undefined for attributes that have not been set, fetched or saved yet
+          ✔ returns undefined for attributes that have been set if the model hasn't been synced yet
+          ✔ returns the previous value of an attribute the last time it was synced
+          ✔ returns the current value of an attribute if it hasn't been changed
+          ✔ returns undefined if no attribute name is supplied
+          ✔ returns the model's current attributes if no attributes were changed after fetch
+          ✔ returns the model's current attributes if no attributes were changed after fetching collection
+          ✔ returns the model's current attributes if no attributes were changed after save
+          ✔ returns the model's original attributes if the model has changed
+          ✔ returns a model's original attributes if a model in a collection has changed
+          ✔ returns the model's original attributes after save
+          ✔ returns the model's original attributes after save on the 'updated' event
+          ✔ returns the model's current attributes after save without changes on the 'updated' event
+          ✔ returns the model's current attributes after save without changes on the 'updated' event with a collection
+          ✔ returns the model's original attributes after destroy
+          ✔ returns an empty object if no model data has been fetched yet
+          ✔ returns the model's current attributes when the model is eager loaded without changes
+          ✔ returns the model's original attributes when the model is eager loaded
+          ✔ returns true if passing an attribute name that has changed since the last sync
+          ✔ returns false if passing an attribute name that has not changed since the last sync
+          ✔ returns true if no arguments are provided and an attribute of the model has changed
+          ✔ returns false if no arguments are provided and the model hasn't changed
+          ✔ returns false if attribute is changed and then changed again to the initial value
+          ✔ returns false after an attribute is changed and the model is saved
+          ✔ creates a new collection for the current model
+          ✔ counts the number of matching records in the database
+          ✔ event.once return a promise
+          ✔ should be equivalent when cloned
+          ✔ should contain a copy of internal QueryBuilder object - #945
+          ✔ should default to insert for new model
+          ✔ should default to update for non-new model
+          ✔ should normalize to lowercase
+          ✔ should always update on patch
+          ✔ should have own EmptyError
+          ✔ counts the number of models in a collection
+          ✔ optionally counts by column (excluding null values)
+          ✔ counts a filtered query
+          ✔ counts a `hasMany` relation
+          ✔ counts a `hasMany` `through` relation
+          ✔ fetches the models in a collection
+          ✔ returns an empty collection if no models can be fetched
+          ✔ throws an error if no models can be fetched with the require option
+          ✔ fetches a page from a collection
+          ✔ fetches a page from a relation collection
+          ✔ fetches a page from a relation collection with additional condition
+          ✔ fetches a single model from the collection
+          ✔ maintains a clone of the query builder from the current collection
+          ✔ rejects with an error if no record exists
+          ✔ resolves to null with the {require: false} option if no model exists
+          ✔ orders the results by column in ascending order
+          ✔ orders the results by column in descending order
+          ✔ orders the results in ascending order when chained with fetchPage()
+          ✔ orders the results in descending order when chained with fetchPage()
+          ✔ creates and saves a new model instance, saving it to the collection
+          ✔ should populate a `hasMany` or `morphMany` with the proper keys
+          ✔ should not set incorrect foreign key in a `hasMany` `through` relation - #768
+          ✔ should automatically create a join model when joining a belongsToMany
+          ✔ should populate the nested relations with the proper keys
+          ✔ can require items in the response
+          ✔ correctly parses added relation keys
+          ✔ should contain a copy of internal QueryBuilder object - #945
+          ✔ constrains the fetch call with the specified query conditions
+          ✔ can constrain the fetch call with the "key, comparator, value" type conditions
+            ✔ handles belongsTo (blog, site)
+            ✔ handles hasMany (posts)
+            ✔ handles hasOne (meta)
+            ✔ handles belongsToMany (posts)
+            ✔ eager loads "hasOne" relationships correctly (site -> meta)
+            ✔ does not load "hasOne" relationship when it doesn't exist (site -> meta)
+            ✔ eager loads "hasMany" relationships correctly (site -> authors, blogs)
+            ✔ eager loads "hasMany" relationships when children have duplicate ids
+            ✔ eager loads "belongsTo" relationships correctly (blog -> site)
+            ✔ does not load "belongsTo" relationship when foreignKey is null (blog -> site) #1299
+            ✔ throws an error if you try to fetch a related object without the necessary key
+            ✔ eager loads "belongsToMany" models correctly (post -> tags)
+            ✔ attaches an empty related model or collection if the `EagerRelation` comes back blank
+            ✔ maintains eager loaded column specifications, #510
+            ✔ can load relations when foreign key is 0
+            ✔ throws an error on undefined first withRelated relations
+            ✔ throws an error on undefined non-first withRelated relations
+            ✔ is possible to add withRelated in events
+              ✔ withRelated option
+              ✔ load() method
+            ✔ eager loads "hasOne" models correctly (sites -> meta)
+            ✔ eager loads "belongsTo" models correctly (blogs -> site) including #1299
+            ✔ eager loads "hasMany" models correctly (site -> blogs)
+            ✔ eager loads "belongsToMany" models correctly (posts -> tags)
+            ✔ eager loads "belongsToMany" models correctly and parent is not undefined
+            ✔ when parent model has custom id attribute and a parse method that mutates it
+            ✔ eager loads "hasMany" -> "hasMany" (site -> authors.ownPosts)
+            ✔ eager loads "hasMany" -> "belongsToMany" (site -> authors.posts)
+            ✔ does multi deep eager loads (site -> authors.ownPosts, authors.site, blogs.posts)
+            ✔ eager loads "hasMany" -> "hasMany" (sites -> authors.ownPosts)
+            ✔ eager loads relations on a populated model (site -> blogs, authors.site)
+            ✔ eager loads attributes on a collection (sites -> blogs, authors.site)
+            ✔ attaching event get's triggered
+            ✔ creating event get's triggered
+            ✔ has an attaching event, which will fail if an error is thrown
+            ✔ has an detaching event, which will fail if an error is thrown
+            ✔ provides "attach" for creating or attaching records
+            ✔ keeps the attach method for eager loaded relations, #120
+            ✔ can attach `belongsToMany` relation to models eager loaded with `fetchAll`, #629
+            ✔ keeps the pivotal helper methods when cloning a collection having `relatedData` with `type` "belongsToMany", #1197
+            ✔ updates all rows inside the pivot table belonging to the current model
+            ✔ updates all rows, which match the passed in query-criteria
+            ✔ throws an error if no columns are updated and `require: true` is passed as option
+            ✔ works with many-to-many (user -> roles)
+            ✔ works with eager loaded many-to-many (user -> roles)
+            ✔ handles morphOne (photo)
+            ✔ handles morphMany (photo)
+            ✔ handles morphTo with custom morphValue (imageable "authors")
+            ✔ handles morphTo (imageble "authors", PhotoParsed)
+            ✔ has no side effects for morphTo (imageable "authors", PhotoParsed)
+            ✔ handles morphTo (imageable "sites")
+            ✔ eager loads morphMany (sites -> photos)
+            ✔ eager loads morphTo (photos -> imageable)
+            ✔ eager loads beyond the morphTo, where possible
+            ✔ handles morphOne with custom columnNames (thumbnail)
+            ✔ handles morphMany with custom columnNames (thumbnail)
+            ✔ handles morphTo with custom columnNames (imageable "authors")
+            ✔ handles morphTo with custom columnNames (imageable "sites")
+            ✔ eager loads morphMany with custom columnNames (sites -> thumbnails)
+            ✔ eager loads morphTo with custom columnNames (thumbnails -> imageable)
+            ✔ eager loads beyond the morphTo with custom columnNames, where possible
+            ✔ throws an error if the type attribute is not defined
+            ✔ throws an error if the type attribute is not one of the expected types
+            ✔ handles hasMany `through`
+            ✔ eager loads hasMany `through`
+            ✔ eager loads hasMany `through` using where / fetchAll
+            ✔ handles hasOne `through`
+            ✔ eager loads hasOne `through`
+            ✔ eager loads belongsToMany `through`
+            ✔ eager loads belongsTo `through`
+          ✔ should return Customer (id=1) with settings
+          ✔ should return Customer (id=4) with settings
+          ✔ #65 - should eager load correctly for models
+          ✔ #65 - should eager load correctly for collections
+          ✔ doesnt pass the columns along to sub-queries
+          ✔ maintains the correct parent model references when using related()
+          ✔ correctly pairs eager-loaded models before parse()
+          ✔ parses eager-loaded models after pairing
+          ✔ parses eager-loaded models previous attributes after pairing
+          ✔ parses eager-loaded morphTo relations (model)
+          ✔ eager fetches belongsTo correctly on a dual parse
+          ✔ eager fetches belongsTo correctly on a dual parse
+          ✔ should not run a query for eagerly loaded `belongsTo` relations if the foreign key is null
+          ✔ should not run a query for eagerly loaded `morphTo` relations if the foreign key is null
+          ✔ should not set the foreign key on the target model when saving
+          ✔ should trigger pivot model lifecycle event: creating
+          ✔ should trigger pivot model lifecycle event: created
+          ✔ should trigger pivot model lifecycle event: saving
+          ✔ should trigger pivot model lifecycle event: saved
+          ✔ should trigger pivot model lifecycle event: fetching
+          ✔ should trigger pivot model lifecycle event: fetched
+          ✔ should trigger pivot model lifecycle event: updating
+          ✔ should trigger pivot model lifecycle event: updated
+          ✔ should trigger pivot model lifecycle event: destroying
+          ✔ should trigger pivot model lifecycle event: destroyed
+          ✔ works with hasOne relation (locale -> translation)
+          ✔ works with eager loaded hasOne relation (locale -> translation)
+          ✔ works with hasOne `through` relation (customer -> locale)
+          ✔ works with eager loaded hasOne `through` relation (customer -> locale)
+          ✔ works with hasMany relation (locale -> translations)
+          ✔ works with eager loaded hasMany relation (locale -> translations)
+          ✔ works with hasMany `through` relation (customer -> locales)
+          ✔ works with eager loaded hasMany `through` relation (customer -> locales)
+          ✔ works with belongsTo relation (translation -> locale)
+          ✔ works with eager loaded belongsTo relation (translation -> locale)
+          ✔ works with belongsTo `through` relation (locale -> customer)
+          ✔ works with eager loaded belongsTo `through` relation (locale -> customer)
+          ✔ works with belongsToMany relation (locale -> customers)
+          ✔ works with eager loaded belongsToMany relation (locale -> customers)
+          ✔ works with belongsToMany `through` relation (locale -> customers)
+          ✔ works with eager belongsToMany `through` relation (locale -> customers)
+          ✔ should group relations properly with binary ID columns
+          ✔ should correctly set query on fetching with morphTo
+        ✔ can be the path to a plugin
+        ✔ can be an array of plugins
+        ✔ can be a function
+        ✔ returns the Bookshelf instance for chaining
+        ✔ can modify the `Collection` model returned by `Model#collection`
+        ✔ can modify the `Collection` model used by relations
+  732 passing (8s)
+  6 pending
+  1 failing
