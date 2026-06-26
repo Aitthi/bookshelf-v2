@@ -17,7 +17,8 @@
     "build:esm": "swc src -d dist/esm --strip-leading-paths -C module.type=es6",
     "build:cjs": "swc src -d dist/cjs --strip-leading-paths -C module.type=commonjs",
     "build:types": "tsc --emitDeclarationOnly --outDir dist/types",
-    "build": "rm -rf dist && pnpm build:esm && pnpm build:cjs && pnpm build:types && node scripts/fix-dist-pkg.mjs"
+    "build": "rm -rf dist && pnpm build:esm && pnpm build:cjs && pnpm build:types && node scripts/fix-dist-pkg.mjs",
+    "fix:sqlite3": "node scripts/rebuild-sqlite3.mjs"
   },
   "homepage": "https://bookshelfjs.org",
   "repository": {
