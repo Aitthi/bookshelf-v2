@@ -28,6 +28,7 @@ export class BPromise<T> extends Promise<T> {
 
   // ─── Override then to preserve BPromise type and carry _ctx ───────────────
 
+  // biome-ignore lint/suspicious/noThenProperty: BPromise is a Promise subclass, overriding then is required
   override then<TResult1 = T, TResult2 = never>(
     onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null | undefined,
     onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null | undefined,

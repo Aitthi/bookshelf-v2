@@ -63,10 +63,10 @@ function compareAscending(value: any, other: any): number {
   if (value !== other) {
     const valDefined = value !== undefined;
     const valNull = value === null;
-    const valReflexive = value === value; // false iff NaN
+    const valReflexive = !Number.isNaN(value); // false iff NaN
     const othDefined = other !== undefined;
     const othNull = other === null;
-    const othReflexive = other === other; // false iff NaN
+    const othReflexive = !Number.isNaN(other); // false iff NaN
     if (
       (!othNull && value > other) ||
       (valNull && othDefined && othReflexive) ||
@@ -348,7 +348,8 @@ const proto: Partial<CollectionBase> & ThisType<CollectionBase> = {
 
         // This is a new model, push it to the `toAdd` list.
       } else if (options.add) {
-        if (!(model = this._prepareModel(attrs, options))) continue;
+        model = this._prepareModel(attrs, options);
+        if (!model) continue;
         toAdd.push(model);
         this._byId[this.idKey(model.cid)] = model;
         if (model.id != null) this._byId[this.idKey(model.id)] = model;
@@ -360,7 +361,8 @@ const proto: Partial<CollectionBase> & ThisType<CollectionBase> = {
     // Remove nonexistent models if appropriate.
     if (options.remove) {
       for (i = 0, l = this.length; i < l; ++i) {
-        if (!modelMap[(model = this.models[i]).cid]) toRemove.push(model);
+        model = this.models[i];
+        if (!modelMap[model.cid]) toRemove.push(model);
       }
       if (toRemove.length) this.remove(toRemove, options);
     }
@@ -387,7 +389,8 @@ const proto: Partial<CollectionBase> & ThisType<CollectionBase> = {
 
     // Trigger `add` events.
     for (i = 0, l = toAdd.length; i < l; i++) {
-      (model = toAdd[i]).trigger('add', model, this, options);
+      model = toAdd[i];
+      model.trigger('add', model, this, options);
     }
     return this;
   },
@@ -481,7 +484,8 @@ const proto: Partial<CollectionBase> & ThisType<CollectionBase> = {
     models = singular ? [models] : clone(models);
     options = options || {};
     for (let i = 0; i < models.length; i++) {
-      const model = (models[i] = this.get(models[i]));
+      models[i] = this.get(models[i]);
+      const model = models[i];
       if (!model) continue;
       delete this._byId[this.idKey(model.id)];
       delete this._byId[model.cid];
@@ -657,7 +661,9 @@ const proto: Partial<CollectionBase> & ThisType<CollectionBase> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   forEach(iteratee: any): any {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.models.forEach((value: any, index: number) => iteratee(value, index, this.models));
+    this.models.forEach((value: any, index: number) => {
+      iteratee(value, index, this.models);
+    });
     return this.models;
   },
 
@@ -759,7 +765,10 @@ const proto: Partial<CollectionBase> & ThisType<CollectionBase> = {
     const out: Record<string, any[]> = {};
     this.models.forEach((model, index) => {
       const key = iteratee(model, index, this.models);
-      (out[key] = out[key] || []).push(model);
+      if (!out[key]) {
+        out[key] = [];
+      }
+      out[key].push(model);
     });
     return out;
   },

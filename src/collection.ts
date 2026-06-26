@@ -523,7 +523,7 @@ const BookshelfCollection = (CollectionBase.extend(
         this._previousAttributes = cloneDeep(this.attributes);
       });
 
-      if (relatedData && relatedData.isJoined()) {
+      if (relatedData?.isJoined()) {
         relatedData.parsePivot(this.models);
       }
     },

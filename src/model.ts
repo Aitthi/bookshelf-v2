@@ -445,7 +445,8 @@ const BookshelfModel = ModelBase.extend(
       if (!isString(morphName)) throw new Error('The `morphTo` name must be specified.');
       // eslint-disable-next-line prefer-rest-params
       const args = arguments;
-      let columnNames, candidates;
+      let columnNames: any[] | null = null;
+      let candidates: any[] = [];
       if (args[1] == null || (Array.isArray(args[1]) && isString(args[1][0]))) {
         columnNames = args[1] || null; // may be `null` or `undefined`
         // Rewrite: `_.drop` requires a real array; `arguments` is array-like.
@@ -1109,9 +1110,7 @@ const BookshelfModel = ModelBase.extend(
             Helpers.saveConstraints(this, this.relatedData);
           }
 
-          const getAttributesToSave = function (method: AnyVal, options: AnyVal, model: AnyVal) {
-            return method === 'update' && options.patch ? attrs : model.attributes;
-          };
+          const getAttributesToSave = (method: AnyVal, options: AnyVal, model: AnyVal) => method === 'update' && options.patch ? attrs : model.attributes;
 
           // Gives access to the `query` object in the `options`, in case we need it
           // in any event handlers.
@@ -1189,7 +1188,7 @@ const BookshelfModel = ModelBase.extend(
 
               // After a successful database save, the id is updated if the model was created
               if (method === 'insert' && this.id == null) {
-                let updatedAttrs;
+                let updatedAttrs: any;
 
                 if (!isObjectResponse) {
                   const updatedCols: AnyVal = {};
@@ -1531,7 +1530,7 @@ const BookshelfModel = ModelBase.extend(
 
       this.set(this.parse(response[0]), {silent: true}).formatTimestamps()._reset();
 
-      if (relatedData && relatedData.isJoined()) {
+      if (relatedData?.isJoined()) {
         relatedData.parsePivot([this]);
       }
     },

@@ -7,7 +7,7 @@ import { omitBy, isPlainObject, isEmpty, extend, result } from './internal/lang'
 const validLocks = ['forShare', 'forUpdate'];
 
 function supportsReturning(client: any = {}): boolean { // any: knex client internals
-  if (!client.config || !client.config.client) return false;
+  if (!client.config?.client) return false;
   return ['postgresql', 'postgres', 'pg', 'oracle', 'mssql'].includes(client.config.client);
 }
 
@@ -36,7 +36,7 @@ extend(Sync.prototype, {
     const tableName = this.syncing.tableName;
     const prefixed: Record<string, unknown> = {};
     for (const key in fields) {
-      prefixed[tableName + '.' + key] = fields[key];
+      prefixed[`${tableName}.${key}`] = fields[key];
     }
     return prefixed;
   },
@@ -79,7 +79,7 @@ extend(Sync.prototype, {
         // Inject all appropriate select costraints dealing with the relation
         // into the `knex` query builder for the current instance.
         if (relatedData)
-          return BPromise.try(function () {
+          return BPromise.try(() => {
             if (relatedData.isThrough()) {
               fks[relatedData.key('foreignKey')] = relatedData.parentFk;
               const through = new relatedData.throughTarget(fks);
@@ -108,11 +108,9 @@ extend(Sync.prototype, {
         return this.syncing.triggerThen('counting', this.syncing, options);
       })
       .then(function (this: any) { // any: bound context; non-arrow preserves BPromise.bind(this)
-        return knex.count((column || '*') + ' as count');
+        return knex.count(`${column || '*'} as count`);
       })
-      .then(function (rows: any) { // any: knex result rows shape is dynamic
-        return rows[0].count;
-      });
+      .then((rows: any) => rows[0].count);
   }),
 
   // Runs a `select` query on the database, adding any necessary relational
@@ -133,7 +131,7 @@ extend(Sync.prototype, {
     // Rewrite: native array methods replace lodash chain _(knex._statements).filter({grouping:'columns'}).some('value.length')
     const queryContainsColumns = (knex as any)._statements // any: knex query builder internals
       .filter((s: any) => s.grouping === 'columns') // any: knex statement object shape is internal
-      .some((s: any) => s.value && s.value.length); // any: knex statement object shape is internal
+      .some((s: any) => s.value?.length); // any: knex statement object shape is internal
 
     return BPromise.bind(this)
       .then(function (this: any) { // any: bound context is Sync instance; non-arrow preserves BPromise.bind(this)
@@ -144,12 +142,12 @@ extend(Sync.prototype, {
         // Inject all appropriate select costraints dealing with the relation
         // into the `knex` query builder for the current instance.
         if (relatedData)
-          return BPromise.try(function () {
+          return BPromise.try(() => {
             if (relatedData.isThrough()) {
               fks[relatedData.key('foreignKey')] = relatedData.parentFk;
               const through = new relatedData.throughTarget(fks);
 
-              return through.triggerThen('fetching', through, relatedData.pivotColumns, options).then(function () {
+              return through.triggerThen('fetching', through, relatedData.pivotColumns, options).then(() => {
                 relatedData.pivotColumns = through.parse(relatedData.pivotColumns);
               });
             }
@@ -170,7 +168,7 @@ extend(Sync.prototype, {
             // If columns have already been selected via the `query` method
             // we will use them. Otherwise, select all columns in this table.
             // result() replaces _.result(this.syncing, 'tableName') — handles plain-value or function
-            columns = [(result(this.syncing as Record<string, unknown>, 'tableName') as string) + '.*'];
+            columns = [`${result(this.syncing as Record<string, unknown>, 'tableName') as string}.*`];
           }
         }
 

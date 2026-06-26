@@ -127,32 +127,32 @@ const Relation = RelationBase.extend(
       if (this[keyName]) return this[keyName];
       switch (keyName) {
         case 'otherKey':
-          this[keyName] = singularMemo(this.targetTableName) + '_' + this.targetIdAttribute;
+          this[keyName] = `${singularMemo(this.targetTableName)}_${this.targetIdAttribute}`;
           break;
         case 'throughForeignKey':
-          this[keyName] = singularMemo(this.joinTable()) + '_' + this.throughIdAttribute;
+          this[keyName] = `${singularMemo(this.joinTable())}_${this.throughIdAttribute}`;
           break;
         case 'foreignKey':
           switch (this.type) {
             case 'morphTo': {
-              const idKeyName = this.columnNames && this.columnNames[1] ? this.columnNames[1] : this.morphName + '_id';
+              const idKeyName = this.columnNames?.[1] ? this.columnNames[1] : `${this.morphName}_id`;
               this[keyName] = idKeyName;
               break;
             }
             case 'belongsTo':
-              this[keyName] = singularMemo(this.targetTableName) + '_' + this.targetIdAttribute;
+              this[keyName] = `${singularMemo(this.targetTableName)}_${this.targetIdAttribute}`;
               break;
             default:
               if (this.isMorph()) {
-                this[keyName] = this.columnNames && this.columnNames[1] ? this.columnNames[1] : this.morphName + '_id';
+                this[keyName] = this.columnNames?.[1] ? this.columnNames[1] : `${this.morphName}_id`;
                 break;
               }
-              this[keyName] = singularMemo(this.parentTableName) + '_' + this.parentIdAttribute;
+              this[keyName] = `${singularMemo(this.parentTableName)}_${this.parentIdAttribute}`;
               break;
           }
           break;
         case 'morphKey':
-          this[keyName] = this.columnNames && this.columnNames[0] ? this.columnNames[0] : this.morphName + '_type';
+          this[keyName] = this.columnNames?.[0] ? this.columnNames[0] : `${this.morphName}_type`;
           break;
         case 'morphValue':
           this[keyName] = this.morphValue || this.parentTableName || this.targetTableName;
@@ -292,7 +292,7 @@ const Relation = RelationBase.extend(
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (!currentColumns || (currentColumns as any).length === 0) {
-        knex.distinct(this.targetTableName + '.*');
+        knex.distinct(`${this.targetTableName}.*`);
       }
 
       if (this.isJoined()) this.joinColumns(knex);
@@ -321,7 +321,7 @@ const Relation = RelationBase.extend(
       push.apply(columns, this.pivotColumns);
       knex.columns(
         map(columns, (col: string) => {
-          return joinTable + '.' + col + ' as _pivot_' + col;
+          return `${joinTable}.${col} as _pivot_${col}`;
         })
       );
     },
@@ -340,23 +340,23 @@ const Relation = RelationBase.extend(
       if (this.type === 'belongsTo' || this.type === 'belongsToMany') {
         const targetKey = this.type === 'belongsTo' ? this.key('foreignKey') : this.key('otherKey');
 
-        knex.join(joinTable, joinTable + '.' + targetKey, '=', this.targetTableName + '.' + this.targetIdAttribute);
+        knex.join(joinTable, `${joinTable}.${targetKey}`, '=', `${this.targetTableName}.${this.targetIdAttribute}`);
 
         // A `belongsTo` -> `through` is currently the only relation with two joins.
         if (this.type === 'belongsTo') {
           knex.join(
             this.parentTableName,
-            joinTable + '.' + this.throughIdAttribute,
+            `${joinTable}.${this.throughIdAttribute}`,
             '=',
-            this.parentTableName + '.' + this.key('throughForeignKey')
+            `${this.parentTableName}.${this.key('throughForeignKey')}`
           );
         }
       } else {
         knex.join(
           joinTable,
-          joinTable + '.' + this.throughIdAttribute,
+          `${joinTable}.${this.throughIdAttribute}`,
           '=',
-          this.targetTableName + '.' + this.key('throughForeignKey')
+          `${this.targetTableName}.${this.key('throughForeignKey')}`
         );
       }
     },
@@ -372,7 +372,7 @@ const Relation = RelationBase.extend(
     // any: knex is a Knex query builder; response is a dynamic array of model attribute objects
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     whereClauses(knex: any, response: any) {
-      let key;
+      let key: string;
 
       if (this.isJoined()) {
         const isBelongsTo = this.type === 'belongsTo';
@@ -527,7 +527,8 @@ const Relation = RelationBase.extend(
           groupedKey = idKey(formatted[keyColumn]);
         }
         if (groupedKey != null) {
-          const relation = (model.relations[relationName] = this.relatedInstance(grouped[groupedKey], options));
+          model.relations[relationName] = this.relatedInstance(grouped[groupedKey], options);
+          const relation = model.relations[relationName];
           if (this.type === 'belongsToMany') {
             // If type is `belongsToMany` then the relatedData needs to be recreated through the
             // parent model
@@ -542,7 +543,7 @@ const Relation = RelationBase.extend(
       // Now that related models have been successfully paired, update each with its parsed
       // attributes
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      related.map((model: any) => {
+      related.forEach((model: any) => {
         model.attributes = model.parse(model.attributes);
         model.formatTimestamps()._previousAttributes = cloneDeep(model.attributes);
         model._reset();
@@ -703,9 +704,9 @@ const Relation = RelationBase.extend(
 // Simple memoization of the singularize call.
 // singularMemo is referenced inside method bodies (not at module top level), so defining it here
 // after Relation is safe — by the time any method calls singularMemo, the module is fully loaded.
-const singularMemo = (function () {
+const singularMemo = (() => {
   const cache: Record<string, string> = Object.create(null);
-  return function (arg: string): string {
+  return (arg: string): string => {
     if (!(arg in cache)) {
       cache[arg] = singularize(arg);
     }
@@ -972,7 +973,7 @@ const PivotHelpers = {
     // Grab the `knex` query builder for the current model, and
     // check if we have any additional constraints for the query.
     const builder = this._builder(relatedData.joinTable());
-    if (options && options.query) {
+    if (options?.query) {
       Helpers.query.call(null, {_knex: builder}, [options.query]);
     }
 
@@ -980,17 +981,15 @@ const PivotHelpers = {
       if (options.transacting) builder.transacting(options.transacting);
       if (options.debug) builder.debug();
     }
-
-    const collection = this;
     if (method === 'delete') {
       return builder
         .where(data)
         .del()
-        .then(function () {
-          if (!item) return collection.reset();
-          const model = collection.get(data[relatedData.key('otherKey')]);
+        .then(() => {
+          if (!item) return this.reset();
+          const model = this.get(data[relatedData.key('otherKey')]);
           if (model) {
-            collection.remove(model);
+            this.remove(model);
           }
         });
     }
@@ -999,7 +998,7 @@ const PivotHelpers = {
         .where(data)
         .update(item)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then(function (numUpdated: any) {
+        .then((numUpdated: any) => {
           if (options && options.require === true && numUpdated === 0) {
             throw new Error('No rows were updated');
           }
@@ -1007,11 +1006,9 @@ const PivotHelpers = {
         });
     }
 
-    return this.triggerThen('creating', this, data, options).then(function () {
-      return builder.insert(data).then(function () {
-        collection.add(item);
-      });
-    });
+    return this.triggerThen('creating', this, data, options).then(() => builder.insert(data).then(() => {
+        this.add(item);
+      }));
   }),
 
   /**
@@ -1061,7 +1058,7 @@ const PivotHelpers = {
       .set(fks)
       .fetch()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then(function (instance: any) {
+      .then((instance: any) => {
         if (method === 'delete') {
           return instance.destroy(options);
         }

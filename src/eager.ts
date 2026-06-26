@@ -142,7 +142,7 @@ class EagerRelation extends EagerBase {
     return reduce(
       options.withRelated as any[],
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      function (memo: any[], val: any) {
+      (memo: any[], val: any) => {
         for (const key in val) {
           const seg = key.split('.')[0];
           if (isFunction(relatedModel[seg])) memo.push(val);

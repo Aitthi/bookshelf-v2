@@ -43,7 +43,7 @@ class EagerBase {
     for (let i = 0, l = withRelated.length; i < l; i++) {
       const related = withRelated[i];
       if (isString(related)) {
-        obj[related] = function () {};
+        obj[related] = () => {};
       } else {
         extend(obj, related as Record<string, () => void>);
       }
@@ -69,7 +69,8 @@ Object.assign(EagerBase.prototype, {
   fetch: BPromise.method(function (this: EagerBase, options: any) {
     const target = this.target;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handled = (this.handled = {} as Record<string, any>);
+    this.handled = {} as Record<string, any>;
+    const handled = this.handled;
     const withRelated = this.prepWithRelated(options.withRelated);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const subRelated: Record<string, any[]> = {};
@@ -95,7 +96,7 @@ Object.assign(EagerBase.prototype, {
       if (handled[relationName]) continue;
 
       if (!isFunction(target[relationName])) {
-        throw new Error(relationName + ' is not defined on the model.');
+        throw new Error(`${relationName} is not defined on the model.`);
       }
 
       const relation = target[relationName]();
@@ -118,7 +119,7 @@ Object.assign(EagerBase.prototype, {
           extend({} as Record<string, unknown>, options as Record<string, unknown>, {
             isEager: true,
             withRelated: subRelated[relationName],
-            _beforeFn: withRelated[relationName] || function () {},
+            _beforeFn: withRelated[relationName] || (() => {}),
           }),
         ),
       );

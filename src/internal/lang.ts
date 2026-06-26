@@ -45,7 +45,7 @@ export function isEmpty(v: unknown): boolean {
 }
 
 export function has(obj: object, path: string): boolean {
-  return Object.prototype.hasOwnProperty.call(obj, path);
+  return  Object.hasOwn(obj, path);
 }
 
 // ---------------------------------------------------------------------------
@@ -211,7 +211,9 @@ export function each<T>(
   fn: (v: T, k: string | number) => void,
 ): void {
   if (Array.isArray(collection)) {
-    collection.forEach((v, i) => fn(v, i));
+    collection.forEach((v, i) => {
+      fn(v, i);
+    });
   } else {
     for (const k of Object.keys(collection)) {
       fn(collection[k], k);
@@ -304,7 +306,8 @@ export function groupBy<T>(
   const result: Record<string, T[]> = {};
   for (const v of collection) {
     const k = fn(v);
-    (result[k] ??= []).push(v);
+    result[k] ??= [];
+    result[k].push(v);
   }
   return result;
 }
@@ -368,6 +371,7 @@ export function camelCase(str: string): string {
     .replace(/^(.)/, (c) => c.toLowerCase());
 }
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: legacy name matching lodash
 export function escape(str: string): string {
   return str
     .replace(/&/g, '&amp;')

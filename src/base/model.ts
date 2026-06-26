@@ -13,7 +13,7 @@ import {
   mapKeys,
   pick,
   omit,
-  escape,
+  escape as escapeHtml,
   isNull,
 } from '../internal/lang';
 import Events from './events';
@@ -318,7 +318,7 @@ const proto: Partial<ModelBase> & ThisType<ModelBase> = {
   escape(key: string): string {
     const val = this.get(key);
     // lodash _.escape coerces null/undefined to ''; replicate that here
-    return escape(val == null ? '' : String(val));
+    return escapeHtml(val == null ? '' : String(val));
   },
 
   /**
@@ -378,12 +378,17 @@ const proto: Partial<ModelBase> & ThisType<ModelBase> = {
    * @returns {Model|Collection|undefined}
    */
   related(name: string): unknown {
-    return (
-      this.relations[name] ||
-      // any: dynamic method lookup on model instance for relation methods (Backbone-style)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ((this as any)[name] ? (this.relations[name] = (this as any)[name]()) : void 0)
-    );
+    if (this.relations[name]) {
+      return this.relations[name];
+    }
+    // any: dynamic method lookup on model instance for relation methods (Backbone-style)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((this as any)[name]) {
+      const relation = (this as any)[name]();
+      this.relations[name] = relation;
+      return relation;
+    }
+    return undefined;
   },
 
   /**
@@ -444,7 +449,7 @@ const proto: Partial<ModelBase> & ThisType<ModelBase> = {
     if (!this.hasTimestamps) return {};
 
     const now =
-      (options || {}).date ? new Date((options as AnyObj).date as string | number | Date) : new Date();
+      options?.date ? new Date((options as AnyObj).date as string | number | Date) : new Date();
     const attributes: AnyObj = {};
     const method = this.saveMethod(options);
     const timestampKeys = this.getTimestampKeys();

@@ -85,16 +85,23 @@ const helpers = {
           // set. What we want instead is to use `DISTINCT`.
           // any: qb._statements is a knex internal not exposed in types
           remove((qb as any)._statements, (statement: any) => {
-            if (statement.grouping === 'group') statement.value.forEach((value: unknown) => groupColumns.push(value));
-            if (statement.grouping === 'columns' && statement.distinct)
-              statement.value.forEach((value: unknown) => groupColumns.push(value));
+            if (statement.grouping === 'group') {
+              statement.value.forEach((value: unknown) => {
+                groupColumns.push(value);
+              });
+            }
+            if (statement.grouping === 'columns' && statement.distinct) {
+              statement.value.forEach((value: unknown) => {
+                groupColumns.push(value);
+              });
+            }
 
             return notNeededQueries.indexOf(statement.type) > -1 || statement.grouping === 'columns';
           });
 
           if (!isModel && counter.relatedData) {
             // Remove joining columns that break COUNT operation, eg. pivotal coulmns for belongsToMany relation.
-            counter.relatedData.joinColumns = function () {};
+            counter.relatedData.joinColumns = () => {};
           }
 
           qb.countDistinct.apply(qb, groupColumns.length > 0 ? groupColumns : targetIdColumn);
@@ -102,7 +109,7 @@ const helpers = {
         [fetchMethodName](countOptions)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .then((result: any) => {
-          if (result && result.length == 1) {
+          if (result && result.length === 1) {
             // We shouldn't have to do this, instead it should be result.models[0].get('count') but SQLite and MySQL
             // return a really strange key name and Knex doesn't abstract that away yet:
             // https://github.com/tgriesser/knex/issues/3315.
@@ -110,7 +117,7 @@ const helpers = {
 
             if (keys.length === 1) {
               const key = Object.keys(result.models[0].attributes)[0];
-              metadata.rowCount = parseInt(result.models[0].attributes[key]);
+              metadata.rowCount = parseInt(result.models[0].attributes[key], 10);
             }
           }
         });
@@ -126,7 +133,7 @@ const helpers = {
   // Sets the constraints necessary during a `model.save` call.
   // any: model and relatedData are polymorphic ORM objects
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  saveConstraints: function (model: any, relatedData: any) {
+  saveConstraints: (model: any, relatedData: any) => {
     const data: AnyOptions = {};
 
     if (
@@ -146,11 +153,11 @@ const helpers = {
   // an error if none is matched.
   // any: candidates is an array of [Model, morphValue] tuples with dynamic types
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  morphCandidate: function (candidates: any[], morphValue: unknown) {
+  morphCandidate: (candidates: any[], morphValue: unknown) => {
     const Target = find(candidates, (candidate: any) => candidate[1] === morphValue);
 
     if (!Target)
-      throw new Error('The target polymorphic type "' + morphValue + '" is not one of the defined target types');
+      throw new Error(`The target polymorphic type "${morphValue}" is not one of the defined target types`);
 
     return Target[0];
   },
@@ -162,7 +169,7 @@ const helpers = {
   // methods, and the values are the arguments for the query.
   // any: obj is a polymorphic Model/Collection with dynamic _knex/_builder
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  query: function (obj: any, args: any[]) {
+  query: (obj: any, args: any[]) => {
     // Ensure the object has a query builder.
     if (!obj._knex) {
       const tableName = result(obj as Record<string, unknown>, 'tableName');
@@ -196,7 +203,7 @@ const helpers = {
 
   // any: obj is a polymorphic Model/Collection instance
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  orderBy: function (obj: any, sort: string | null | undefined, order: string | null | undefined) {
+  orderBy: (obj: any, sort: string | null | undefined, order: string | null | undefined) => {
     let tableName: string;
     let idAttribute: string;
     let _sort: string;

@@ -48,7 +48,7 @@ function preventOverwrite(store: Record<string, unknown>, name: string): void {
 // any: knex is a runtime-provided instance; no typed import required for the factory
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function Bookshelf(knex: any): any {
-  if (!knex || knex.name !== 'knex') {
+  if (knex?.name !== 'knex') {
     throw new Error('Invalid knex instance');
   }
 
@@ -60,7 +60,7 @@ function Bookshelf(knex: any): any {
     return (
       bookshelf.collection(input) ||
       bookshelf.model(input) ||
-      (function () {
+      (() => {
         throw new errors.ModelNotResolvedError(`The model ${input} could not be resolved from the registry.`);
       })()
     );
@@ -174,7 +174,7 @@ function Bookshelf(knex: any): any {
     resolve(_name: string): unknown { return undefined; }
   };
 
-  const Model = (bookshelf.Model = BookshelfModel.extend(
+  bookshelf.Model = BookshelfModel.extend(
     {
       _builder: builderFn,
 
@@ -335,9 +335,10 @@ function Bookshelf(knex: any): any {
         return this.forge().fetchAll(options);
       }
     }
-  ));
+  );
+  const Model = bookshelf.Model;
 
-  const Collection = (bookshelf.Collection = BookshelfCollection.extend(
+  bookshelf.Collection = BookshelfCollection.extend(
     {
       _builder: builderFn,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -379,7 +380,8 @@ function Bookshelf(knex: any): any {
         return new this(models, options);
       }
     }
-  ));
+  );
+  const Collection = bookshelf.Collection;
 
   // The collection also references the correct `Model`, specified above, for
   // creating new `Model` instances in the collection.
@@ -574,7 +576,9 @@ function Bookshelf(knex: any): any {
         requirePlugin(plugin)(this, options);
       } else if (Array.isArray(plugin)) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        plugin.forEach((p: any) => this.plugin(p, options));
+        plugin.forEach((p: any) => {
+          this.plugin(p, options);
+        });
       } else {
         plugin(this, options);
       }

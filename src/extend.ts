@@ -11,7 +11,7 @@ export default function extend(this: any, protoProps?: any, staticProps?: any): 
   // (the "constructor" property in your `extend` definition), or defaulted
   // by us to simply call the parent's constructor.
   const Child =
-    protoProps && protoProps.hasOwnProperty('constructor')
+    protoProps && Object.hasOwn(protoProps, 'constructor')
       ? protoProps.constructor
       : function (this: unknown, ...args: unknown[]) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
