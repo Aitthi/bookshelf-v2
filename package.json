@@ -54,8 +54,6 @@
     "@swc/core": "^1.15.43",
     "@types/node": "^26.0.1",
     "@vitest/coverage-v8": "^4.1.9",
-    "bookshelf-jsdoc-theme": "^1.0.1",
-    "jsdoc": "^4.0.3",
     "knex": "^3.1.0",
     "mysql2": "^3.9.7",
     "pg": "^8.11.5",
