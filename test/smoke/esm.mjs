@@ -18,26 +18,38 @@ if (orm.VERSION !== '2.0.0') {
   throw new Error(`Expected VERSION 2.0.0, got ${orm.VERSION}`);
 }
 
-// 2. Can define a Model
-const User = orm.Model.extend({ tableName: 'users' });
-
-// 3. Model.forge works
-const user = User.forge({ name: 'Alice' });
-if (!(user instanceof User)) {
-  throw new Error('forge() did not return a User instance');
+// 2. Model.extend + instanceof orm.Model
+const M = orm.Model.extend({ tableName: 't' });
+const m = new M({ a: 1 });
+if (!(m instanceof orm.Model)) {
+  throw new Error('m instanceof orm.Model failed');
 }
 
+// 3. save() returns a BPromise with .tap
+const savePromise = m.save();
+if (typeof savePromise.tap !== 'function') {
+  throw new Error('.tap is not a function on save() return — expected BPromise');
+}
+savePromise.catch(() => {}); // suppress unhandled rejection (no real DB)
+
 // 4. Model registry
-orm.model('User', User);
-if (orm.model('User') !== User) {
+orm.model('M', M);
+if (orm.model('M') !== M) {
   throw new Error('orm.model() registry failed');
 }
 
-// 5. plugin() with function works
+// 5. plugin(fn) works
 let pluginCalled = false;
 orm.plugin(function pluginFn(bookshelf) { pluginCalled = true; });
 if (!pluginCalled) {
   throw new Error('plugin(fn) was not called');
 }
 
-console.log('ESM smoke test OK — VERSION', orm.VERSION);
+// 6. Bundled virtuals plugin — import and load
+const { default: virtuals } = await import(join(pkgRoot, 'dist/esm/plugins/virtuals.js'));
+if (typeof virtuals !== 'function') {
+  throw new Error('virtuals plugin is not a function');
+}
+orm.plugin(virtuals);
+
+console.log('ESM smoke OK');

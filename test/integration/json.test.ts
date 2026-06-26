@@ -20,14 +20,14 @@ const _require = createRequire(import.meta.url);
 
 // CJS helpers — no TypeScript versions exist for the json sub-helpers.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const checkJsonSupport: (bookshelf: any) => boolean = _require('./helpers/json/supported');
+const checkJsonSupport: (bookshelf: any) => boolean = _require('./helpers/json/supported.cjs');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const jsonMigration: (bookshelf: any) => Promise<void> = _require('./helpers/json/migration');
+const jsonMigration: (bookshelf: any) => Promise<void> = _require('./helpers/json/migration.cjs');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const jsonInserts: (bookshelf: any) => Promise<void> = _require('./helpers/json/inserts');
+const jsonInserts: (bookshelf: any) => Promise<void> = _require('./helpers/json/inserts.cjs');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const defineJsonObjects: (bookshelf: any) => {Models: {Command: any; Unit: any}} =
-  _require('./helpers/json/objects');
+  _require('./helpers/json/objects.cjs');
 
 const {Models: JsonModels} = defineJsonObjects(bookshelf);
 const Command = JsonModels.Command;
