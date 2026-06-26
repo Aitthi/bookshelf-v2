@@ -86,5 +86,14 @@
   "readmeFilename": "README.md",
   "engines": {
     "node": ">=16"
+  },
+  "dependencies": {},
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sqlite3",
+      "@swc/core",
+      "@biomejs/biome",
+      "esbuild"
+    ]
   }
 }
