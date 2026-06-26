@@ -44,7 +44,20 @@ export class BPromise<T> extends Promise<T> {
           }
         : onfulfilled;
 
-    const next = super.then(wrappedFulfilled as Parameters<Promise<T>['then']>[0], onrejected) as BPromise<TResult1 | TResult2>;
+    // Wrap onrejected so it is also called with the bound context (bluebird
+    // .bind parity — `.catch(function(){ this })` must see the bound ctx).
+    const wrappedRejected =
+      onrejected != null
+        ? function (reason: unknown) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return (onrejected as any).call(ctx, reason) as TResult2 | PromiseLike<TResult2>;
+          }
+        : onrejected;
+
+    const next = super.then(
+      wrappedFulfilled as Parameters<Promise<T>['then']>[0],
+      wrappedRejected as Parameters<Promise<T>['then']>[1],
+    ) as BPromise<TResult1 | TResult2>;
     // Carry context forward into the derived promise.
     next._ctx = ctx;
     return next;

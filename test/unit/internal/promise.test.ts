@@ -82,4 +82,25 @@ describe('BPromise', () => {
   it('then returns a BPromise (subclass preserved)', () => {
     expect(BPromise.resolve(1).then((x) => x)).toBeInstanceOf(BPromise);
   });
+
+  it('bind context propagates to catch/rejection handlers', async () => {
+    const ctx = { name: 'ctx' };
+    const result = await BPromise.bind(ctx)
+      .then(() => { throw new Error('boom'); })
+      .catch(function (this: typeof ctx) { return this.name; });
+    expect(result).toBe('ctx');
+  });
+
+  it('then onRejected receives bound context', async () => {
+    const ctx = { tag: 42 };
+    const out = await BPromise.bind(ctx)
+      .then(
+        () => { throw new Error('x'); }
+      )
+      .then(
+        () => 'unreachable',
+        function (this: typeof ctx) { return this.tag; }
+      );
+    expect(out).toBe(42);
+  });
 });
