@@ -18,6 +18,7 @@
 import {describe, it, expect, beforeAll, beforeEach, afterAll, afterEach} from 'vitest';
 import {equal} from 'node:assert/strict';
 import {bookshelf, Models, generateEventModels, initialize} from './helpers/harness';
+import {BPromise} from '../../src/internal/promise';
 import outputRaw from './output/Relations';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -998,7 +999,7 @@ describe('Relations', () => {
       (Photo.prototype as any).sync = function () {
         return {
           first: () =>
-            Promise.resolve([
+            BPromise.resolve([
               {
                 id: 1,
                 imageable_type: 'sites',
@@ -1011,14 +1012,14 @@ describe('Relations', () => {
       (Author.prototype as any).sync = function () {
         return {
           select: () =>
-            Promise.resolve([
+            BPromise.resolve([
               {
                 id: 1,
                 dummy: 'author'
               }
             ]),
           first: () =>
-            Promise.resolve([
+            BPromise.resolve([
               {
                 id: 1,
                 first_name: 'Johannes',
@@ -1033,14 +1034,14 @@ describe('Relations', () => {
         siteSyncCount++;
         return {
           select: () =>
-            Promise.resolve([
+            BPromise.resolve([
               {
                 id: 1,
                 dummy: 'content'
               }
             ]),
           first: () =>
-            Promise.resolve([
+            BPromise.resolve([
               {
                 id: 1,
                 dummy: 'content'
@@ -1064,13 +1065,13 @@ describe('Relations', () => {
     // When `sync` is replaced with a plain-Promise stub, `.bind` is undefined (Bluebird-only API).
     // The original mocha suite used Bluebird globally so `.bind()` worked on all promises.
     // Suspect module: src/model.ts (_doFetch / fetch pipeline).
-    it.skip('should not run a query for eagerly loaded `belongsTo` relations if the foreign key is null', async () => {
+    it('should not run a query for eagerly loaded `belongsTo` relations if the foreign key is null', async () => {
       const a = new Author({id: 1});
       await a.fetch({withRelated: 'site'});
       equal(siteSyncCount, 0);
     });
 
-    it.skip('should not run a query for eagerly loaded `morphTo` relations if the foreign key is null', async () => {
+    it('should not run a query for eagerly loaded `morphTo` relations if the foreign key is null', async () => {
       const p = new Photo({id: 1});
       await p.fetch({withRelated: 'imageable'});
       equal(siteSyncCount, 0);
