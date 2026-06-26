@@ -224,7 +224,7 @@ describe('Sync', () => {
 
       await sync.update({ id: 'updated', name: 'something' });
       expect(capturedAttrs).toHaveProperty('id');
-      expect(capturedAttrs!.id).toBe('updated');
+      expect(capturedAttrs?.id).toBe('updated');
     });
   });
 });

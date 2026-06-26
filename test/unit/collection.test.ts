@@ -217,12 +217,12 @@ describe('Collection', () => {
       const models = [];
 
       for (let i = 0; i < count; ++i) {
-        models.push(new collection.model({ some_id: i, name: 'Large-' + i }));
+        models.push(new collection.model({ some_id: i, name: `Large-${i}` }));
       }
 
       collection.set(models, { add: true, remove: false, merge: false });
 
-      assert.equal(collection.get(count - 1).get('name'), 'Large-' + (count - 1));
+      assert.equal(collection.get(count - 1).get('name'), `Large-${count - 1}`);
     });
   });
 });

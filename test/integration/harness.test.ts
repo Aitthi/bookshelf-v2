@@ -53,7 +53,7 @@ describe('Site model', () => {
   it('fetches a single site by id', async () => {
     const site = await Site.forge({id: 1}).fetch();
     expect(site).not.toBeNull();
-    expect(site!.get('name')).toBe('knexjs.org');
+    expect(site?.get('name')).toBe('knexjs.org');
   });
 });
 
@@ -69,7 +69,7 @@ describe('Site model — save and destroy', () => {
     expect(savedId).toBeTruthy();
 
     const fetched = await Site.forge({id: savedId}).fetch();
-    expect(fetched!.get('name')).toBe('test-harness-site');
+    expect(fetched?.get('name')).toBe('test-harness-site');
 
     await site.destroy();
     const gone = await Site.forge({id: savedId}).fetch({require: false});
@@ -84,7 +84,7 @@ describe('Site model — save and destroy', () => {
 describe('Site#authors (hasMany)', () => {
   it('loads authors for site 1', async () => {
     const site = await Site.forge({id: 1}).fetch({withRelated: ['authors']});
-    const authors = site!.related('authors');
+    const authors = site?.related('authors');
     expect(authors.length).toBeGreaterThanOrEqual(2);
   });
 });
@@ -96,7 +96,7 @@ describe('Site#authors (hasMany)', () => {
 describe('Author#site (belongsTo)', () => {
   it('loads the related site', async () => {
     const author = await Author.forge({id: 1}).fetch({withRelated: ['site']});
-    const site = author!.related('site');
+    const site = author?.related('site');
     expect(site.get('name')).toBe('knexjs.org');
   });
 });
@@ -108,7 +108,7 @@ describe('Author#site (belongsTo)', () => {
 describe('Post#tags (belongsToMany)', () => {
   it('loads tags for post 1', async () => {
     const post = await Post.forge({id: 1}).fetch({withRelated: ['tags']});
-    const tags = post!.related('tags');
+    const tags = post?.related('tags');
     expect(tags.length).toBeGreaterThanOrEqual(3);
   });
 });
@@ -120,7 +120,7 @@ describe('Post#tags (belongsToMany)', () => {
 describe('Blog#comments (hasMany through Post)', () => {
   it('loads comments through posts for blog 1', async () => {
     const blog = await Blog.forge({id: 1}).fetch({withRelated: ['comments']});
-    const comments = blog!.related('comments');
+    const comments = blog?.related('comments');
     expect(comments.length).toBeGreaterThanOrEqual(1);
   });
 });
@@ -132,7 +132,7 @@ describe('Blog#comments (hasMany through Post)', () => {
 describe('User#roles (belongsToMany with custom keys)', () => {
   it('loads roles for user 1', async () => {
     const user = await User.forge({uid: 1}).fetch({withRelated: ['roles']});
-    const roles = user!.related('roles');
+    const roles = user?.related('roles');
     expect(roles.length).toBeGreaterThanOrEqual(2);
   });
 });

@@ -21,7 +21,7 @@ function snakeCase(str: string): string {
 function _parsed(attributes: Record<string, unknown>): Record<string, unknown> {
   const parsed: Record<string, unknown> = {};
   for (const name of Object.keys(attributes)) {
-    parsed[name + '_parsed'] = attributes[name];
+    parsed[`${name}_parsed`] = attributes[name];
   }
   return parsed;
 }
@@ -353,7 +353,7 @@ export default function defineObjects(Bookshelf: AnyBookshelf): {
     format(fields: Record<string, unknown>) {
       const cols: Record<string, unknown> = {};
       for (const f of Object.keys(fields)) {
-        cols['organization_' + f] = fields[f];
+        cols[`organization_${f}`] = fields[f];
       }
       return cols;
     },
