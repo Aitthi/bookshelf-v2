@@ -1,5 +1,5 @@
 {
-  "name": "re-bookshelf",
+  "name": "bookshelf-v2",
   "version": "1.2.2",
   "description": "A lightweight ORM for PostgreSQL, MySQL, and SQLite3",
   "main": "bookshelf.js",
