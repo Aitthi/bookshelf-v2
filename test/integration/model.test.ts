@@ -1274,6 +1274,7 @@ describe('Model', () => {
       const query = user.query();
       user.refresh = () => BPromise.resolve({});
 
+      // biome-ignore lint/suspicious/noThenProperty: test mock intentionally intercepts knex query builder's thenable to assert internal state
       query.then = function (this: any, onFulfilled: any, onRejected: any) {
         deepEqual(this._single.update, {bio: 'Short user bio'});
         equal(_.filter(this._statements, {grouping: 'where'}).length, 1);

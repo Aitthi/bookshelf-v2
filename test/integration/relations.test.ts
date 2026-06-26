@@ -498,7 +498,7 @@ describe('Relations', () => {
         await Promise.all([
           (async () => {
             const c = await new Site({id: 1}).related('admins').fetch();
-            c.forEach((m: any) => equal(m.hasChanged(), false));
+            c.forEach((m: any) => { equal(m.hasChanged(), false); });
             equal(c.at(0).pivot.get('item'), 'test');
             equal(c.length, 2);
           })(),
@@ -562,7 +562,7 @@ describe('Relations', () => {
         await Promise.all([
           (async () => {
             const c = await new Site({id: 1}).related('admins').fetch();
-            c.forEach((m: any) => equal(m.hasChanged(), false));
+            c.forEach((m: any) => { equal(m.hasChanged(), false); });
             equal(c.at(0).pivot.get('item'), 'test');
             equal(c.length, 2);
           })(),
