@@ -54,6 +54,36 @@ const collectionProps = [
 ];
 
 /**
+ * Replicates lodash's internal `compareAscending` ordering used by `_.sortBy`.
+ * Ordering (ascending): normal comparable values < NaN < null < undefined.
+ * Two values that are equal (or both special in the same way) return 0.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function compareAscending(value: any, other: any): number {
+  if (value !== other) {
+    const valDefined = value !== undefined;
+    const valNull = value === null;
+    const valReflexive = value === value; // false iff NaN
+    const othDefined = other !== undefined;
+    const othNull = other === null;
+    const othReflexive = other === other; // false iff NaN
+    if (
+      (!othNull && value > other) ||
+      (valNull && othDefined && othReflexive) ||
+      (!valDefined && othReflexive)
+    )
+      return 1;
+    if (
+      (!valNull && value < other) ||
+      (othNull && valDefined && valReflexive) ||
+      (!othDefined && valReflexive)
+    )
+      return -1;
+  }
+  return 0;
+}
+
+/**
  * Builds the iterator used by the attribute-based collection methods
  * (`groupBy`/`countBy`/`sortBy`). Mirrors the lib's per-method wrapper:
  * a function value is used directly, otherwise the value is treated as an
@@ -381,7 +411,7 @@ const proto: Partial<CollectionBase> & ThisType<CollectionBase> = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((models: any[]) =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        BPromise.map(models, (model: any, index: number) => iterator.call(context, model, index)),
+        BPromise.map(models, (model: any, index: number) => iterator.call(context, model, index, models.length)),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ) as BPromise<any[]>;
   },
@@ -416,7 +446,7 @@ const proto: Partial<CollectionBase> & ThisType<CollectionBase> = {
           models,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (accumulator: any, model: any, index: number) =>
-            iterator.call(context, accumulator, model, index),
+            iterator.call(context, accumulator, model, index, models.length),
           initialValue,
         ),
       )
@@ -755,17 +785,13 @@ const proto: Partial<CollectionBase> & ThisType<CollectionBase> = {
       index,
       criteria: iteratee(model, index, this.models),
     }));
-    // Stable ascending sort with `undefined` criteria ordered last (lodash parity).
+    // Stable ascending sort using lodash's `compareAscending` ordering:
+    // normal values < NaN < null < undefined (ties broken by original index).
     mapped.sort((a, b) => {
       const ac = a.criteria;
       const bc = b.criteria;
-      if (ac !== bc) {
-        if (ac === undefined) return 1;
-        if (bc === undefined) return -1;
-        if (ac < bc) return -1;
-        if (ac > bc) return 1;
-      }
-      return a.index - b.index;
+      const order = compareAscending(ac, bc);
+      return order !== 0 ? order : a.index - b.index;
     });
     return mapped.map((entry) => entry.model);
   },
