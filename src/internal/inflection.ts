@@ -34,7 +34,7 @@ const UNCOUNTABLES = new Set([
 // Pluralization rules: [regex, replacement]  (applied in order, first match wins)
 // ---------------------------------------------------------------------------
 const PLURAL_RULES: [RegExp, string][] = [
-  [/quiz$/i,                '$1quizzes'],
+  [/quiz$/i,                'quizzes'],
   [/^(oxen)$/i,             '$1'],
   [/^(ox)$/i,               '$1en'],
   [/(m|l)ice$/i,            '$1ice'],
@@ -51,7 +51,7 @@ const PLURAL_RULES: [RegExp, string][] = [
   [/([ti])a$/i,             '$1a'],
   [/([ti])um$/i,            '$1a'],
   [/sis$/i,                 'ses'],
-  [/(?:([^f])fe|([lr])f)$/, '$1$2ves'],
+  [/(?:([^f])fe|([lr])f)$/i, '$1$2ves'],
   [/(hive)$/i,              '$1s'],
   [/([^aeiouy]|qu)y$/i,     '$1ies'],
   [/(x|ch|ss|sh)$/i,        '$1es'],
@@ -77,7 +77,7 @@ const SINGULAR_RULES: [RegExp, string][] = [
   [/(shoe)s$/i,                                '$1'],
   [/(o)es$/i,                                  '$1'],
   [/(bus)es$/i,                                '$1'],
-  [/([m|l])ice$/i,                             '$1ouse'],
+  [/(m|l)ice$/i,                               '$1ouse'],
   [/(x|ch|ss|sh)es$/i,                         '$1'],
   [/(m)ovies$/i,                               '$1ovie'],
   [/(s)eries$/i,                               '$1eries'],
@@ -123,6 +123,8 @@ export function singularize(word: string): string {
   if (irregular !== undefined) return irregular;
   // Already singular?
   if (IRREGULAR_SINGULAR_TO_PLURAL.has(lower)) return word;
+  // Guard: words ending in 'ss' must not have trailing 's' stripped
+  if (lower.endsWith('ss')) return word;
   return applyRules(word, SINGULAR_RULES);
 }
 

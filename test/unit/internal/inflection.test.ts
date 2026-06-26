@@ -12,6 +12,14 @@ describe('inflection', () => {
     expect(inflection.singularize('categories')).toBe('category');
     expect(inflection.singularize('people')).toBe('person');
   });
+  it('pluralize quiz', () => {
+    expect(inflection.pluralize('quiz')).toBe('quizzes');
+  });
+  it('singularize ss-words', () => {
+    expect(inflection.singularize('addresses')).toBe('address');
+    expect(inflection.singularize('address')).toBe('address');
+    expect(inflection.singularize('classes')).toBe('class');
+  });
   it('underscore / camelize / capitalize', () => {
     expect(inflection.underscore('FooBar')).toBe('foo_bar');
     expect(inflection.camelize('foo_bar')).toBe('FooBar');
