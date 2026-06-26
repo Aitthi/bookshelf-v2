@@ -14,7 +14,7 @@
 export class BPromise<T> extends Promise<T> {
   /** Bound context forwarded to callbacks — replaces bluebird's Promise.bind. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _ctx: any = undefined;
+  protected _ctx: any = undefined;
 
   /**
    * Symbol.species ensures that built-in Promise methods such as `.catch`
@@ -69,7 +69,7 @@ export class BPromise<T> extends Promise<T> {
    * `.then`/`.tap`/etc. callbacks are invoked with `this === ctx`.
    * Passing `undefined` (or no argument) resets the context.
    */
-  bind(ctx: unknown): BPromise<T> {
+  bind(ctx?: unknown): BPromise<T> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const next = this.then((v) => v) as BPromise<T>;
     next._ctx = ctx;
@@ -177,17 +177,17 @@ export class BPromise<T> extends Promise<T> {
   static mapSeries<T, U>(
     items: Iterable<T>,
     fn: (item: T, index: number) => U | PromiseLike<U>,
-  ): BPromise<(U | undefined)[]> {
+  ): BPromise<U[]> {
     return BPromise.try(async () => {
-      const results: (U | undefined)[] = [];
+      const results: U[] = [];
       let i = 0;
       for (const item of items) {
         // eslint-disable-next-line no-await-in-loop
-        results.push((await fn(item, i)) as U | undefined);
+        results.push(await fn(item, i));
         i++;
       }
       return results;
-    }) as BPromise<(U | undefined)[]>;
+    }) as BPromise<U[]>;
   }
 
   /**

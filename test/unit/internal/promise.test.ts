@@ -54,7 +54,7 @@ describe('BPromise', () => {
   });
 
   it('join resolves all then calls handler', async () => {
-    const r = await BPromise.join(BPromise.resolve(1), BPromise.resolve(2), (a, b) => a + b);
+    const r = await BPromise.join(BPromise.resolve(1), BPromise.resolve(2), (a: number, b: number) => a + b);
     expect(r).toBe(3);
   });
 
