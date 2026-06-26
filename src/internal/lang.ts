@@ -16,7 +16,7 @@ export function isFunction(v: unknown): v is (...args: unknown[]) => unknown {
 }
 
 export function isObject(v: unknown): v is object {
-  return v !== null && typeof v === 'object';
+  return v !== null && (typeof v === 'object' || typeof v === 'function');
 }
 
 export function isPlainObject(v: unknown): v is Record<string, unknown> {
@@ -53,6 +53,8 @@ export function has(obj: object, path: string): boolean {
 // ---------------------------------------------------------------------------
 
 export function isEqual(a: unknown, b: unknown): boolean {
+  // SameValueZero semantics: NaN equals NaN (lodash parity)
+  if (typeof a === 'number' && typeof b === 'number' && Number.isNaN(a) && Number.isNaN(b)) return true;
   if (a === b) return true;
   if (a === null || b === null) return false;
   if (typeof a !== typeof b) return false;
@@ -258,7 +260,9 @@ export function filter<T>(
   if (Array.isArray(collection)) {
     return collection.filter((v, i) => pred(v, i));
   }
-  return Object.values(collection).filter((v, i) => pred(v, i));
+  return Object.entries(collection)
+    .filter(([k, v]) => pred(v, k))
+    .map(([, v]) => v);
 }
 
 export function reject<T>(

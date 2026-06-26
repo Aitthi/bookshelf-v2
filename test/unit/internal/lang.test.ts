@@ -67,4 +67,34 @@ describe('lang', () => {
     expect(_.defaultsDeep({ a: { x: 1 } }, { a: { x: 9, y: 2 } }))
       .toEqual({ a: { x: 1, y: 2 } });
   });
+
+  it('isEqual: nested objects, key-count diff, type mismatch, null/undefined, NaN', () => {
+    expect(_.isEqual({ a: { b: 1 } }, { a: { b: 1 } })).toBe(true);
+    expect(_.isEqual({ a: 1 }, { a: 1, b: undefined })).toBe(false);
+    expect(_.isEqual([], {})).toBe(false);
+    expect(_.isEqual(null, undefined)).toBe(false);
+    expect(_.isEqual(NaN, NaN)).toBe(true);
+  });
+
+  it('remove mutates the array and returns removed items', () => {
+    const arr = [1, 2, 3, 4];
+    const removed = _.remove(arr, (v: number) => v % 2 === 0);
+    expect(arr).toEqual([1, 3]);
+    expect(removed).toEqual([2, 4]);
+  });
+
+  it('isObject: true for objects and functions, false for null and primitives', () => {
+    expect(_.isObject(() => {})).toBe(true);
+    expect(_.isObject({})).toBe(true);
+    expect(_.isObject(null)).toBe(false);
+    expect(_.isObject(1)).toBe(false);
+  });
+
+  it('filter on objects passes string key to predicate', () => {
+    const obj = { a: 1, b: 2, c: 3 };
+    const keys: string[] = [];
+    _.filter(obj, (v, k) => { keys.push(k as string); return (v as number) > 1; });
+    expect(keys).toEqual(['a', 'b', 'c']);
+    expect(_.filter(obj, (v) => (v as number) > 1)).toEqual([2, 3]);
+  });
 });
