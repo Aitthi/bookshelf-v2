@@ -5,6 +5,10 @@ import { dirname, join } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkgRoot = join(__dirname, '../../');
 
+// Source of truth for the expected version — never hardcode the literal, or the
+// smoke gate blocks every release after this one (release.yml runs smoke before publish).
+const { default: pkg } = await import(join(pkgRoot, 'package.json'), { with: { type: 'json' } });
+
 // Import built ESM entry
 const { default: Bookshelf } = await import(join(pkgRoot, 'dist/esm/index.js'));
 
@@ -14,8 +18,8 @@ const db = { name: 'knex', queryBuilder: () => ({ on: () => ({}) }), transaction
 const orm = Bookshelf(db);
 
 // 1. VERSION check
-if (orm.VERSION !== '2.0.0') {
-  throw new Error(`Expected VERSION 2.0.0, got ${orm.VERSION}`);
+if (orm.VERSION !== pkg.version) {
+  throw new Error(`Expected VERSION ${pkg.version}, got ${orm.VERSION}`);
 }
 
 // 2. Model.extend + instanceof orm.Model

@@ -1,16 +1,18 @@
 name: release
 
-# Publishes the `bookshelfv2` npm package on a `v*` tag. bookshelfv2 is a pure
+# Publishes the `@assetsart/bookshelf` npm package on a `v*` tag. It is a pure
 # TypeScript package (no native binaries) built to dual ESM/CJS by SWC + tsc, so
 # there is NO per-platform build matrix — one build, one publish.
 #
-# WIRE-ONLY until you tag: nothing publishes on push to main. It does NOT gate on
-# ci.yml — a red CI still publishes once a tag is pushed, so the release SKILL is
-# the gate: only tag after CI is green on main.
+# WIRE-ONLY until you tag: nothing publishes on push to main. This job does NOT
+# depend on the ci.yml workflow, but it RE-RUNS typecheck + lint + test + smoke
+# inline below (on Node 22) before publishing — so a failure there blocks publish.
+# What it does NOT re-check vs ci.yml: the Node 20/24 matrix. The release SKILL is
+# the gate for that: only tag after CI is green on main.
 #
 # PREREQUISITE (manual, one-time): an `NPM_TOKEN` repository secret — an npm
-# automation/granular token with publish rights to the `bookshelfv2` name. Without
-# it the publish step fails at auth. (Provenance also needs `id-token: write`,
+# automation/granular token with publish rights to the `@assetsart/bookshelf` name.
+# Without it the publish step fails at auth. (Provenance also needs `id-token: write`,
 # already granted below.)
 #
 # To cut a release:  node scripts/release-bump.mjs <x.y.z> --release  (on main) →
@@ -46,8 +48,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Typecheck + test (release sanity)
-        run: pnpm typecheck && pnpm test
+      - name: Typecheck + lint + test (release sanity — mirrors ci.yml on Node 22)
+        run: pnpm typecheck && pnpm lint && pnpm test
 
       - name: Build (dual ESM/CJS + types)
         run: pnpm build
@@ -69,7 +71,8 @@ jobs:
           # `latest`, so it never clobbers the stable release users get by default.
           # Stable (no `-` suffix) → normal `latest`.
           if [[ "$VERSION" == *-* ]]; then TAG=next; else TAG=latest; fi
-          echo "publishing bookshelfv2@$VERSION under dist-tag '$TAG'"
+          NAME=$(node -p "require('./package.json').name")
+          echo "publishing $NAME@$VERSION under dist-tag '$TAG'"
           npm publish --provenance --access public --tag "$TAG"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

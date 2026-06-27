@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * scripts/release-bump.mjs — atomically bump the bookshelfv2 version, regenerate
+ * scripts/release-bump.mjs — atomically bump the package version, regenerate
  * the embedded version, then VERIFY, so a release can never ship a mismatched
  * version pair.
  *
- * bookshelfv2 is a SINGLE package (unlike brust's 15 native refs): the only
- * sources of truth are
+ * @assetsart/bookshelf is a SINGLE package (unlike brust's 15 native refs): the
+ * only sources of truth are
  *   - package.json  `version`
  *   - src/version.ts `VERSION`  (the value baked into the runtime via gen-version)
  * src/version.ts is generated from package.json, so this script bumps the root
@@ -36,6 +36,7 @@ const run = (cmd, args) => execFileSync(cmd, args, { cwd: ROOT, stdio: 'pipe' })
 
 // ── Bump package.json `version` (targeted edit, preserve formatting) ──────────
 let pkgText = readFileSync(PKG, 'utf8');
+const NAME = JSON.parse(pkgText).name; // for tag annotations — never hardcode the package name
 const re = /("version"\s*:\s*")([^"]*)(")/;
 const m = pkgText.match(re);
 if (!m) {
@@ -70,7 +71,7 @@ console.log('  package.json version + src/version.ts VERSION');
 if (!RELEASE) {
   console.log('\nnext (or re-run with --release):');
   console.log(`  git commit -am "chore(release): ${NEW}"`);
-  console.log(`  git tag -a v${NEW} -m "bookshelfv2 ${NEW}"`);
+  console.log(`  git tag -a v${NEW} -m "${NAME} ${NEW}"`);
   console.log(`  git push origin HEAD && git push origin v${NEW}`);
   process.exit(0);
 }
@@ -83,7 +84,9 @@ if (branch !== 'main') {
 console.log(`\nreleasing v${NEW} on main …`);
 run('git', ['add', 'package.json', 'src/version.ts']);
 run('git', ['commit', '-m', `chore(release): ${NEW}\n\nCo-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>`]);
-run('git', ['tag', '-a', `v${NEW}`, '-m', `bookshelfv2 ${NEW}`]);
+// Push the commit BEFORE creating the tag: if main is protected and the push is
+// rejected, the script aborts here with no local tag left to block a clean re-run.
 run('git', ['push', 'origin', 'HEAD']);
+run('git', ['tag', '-a', `v${NEW}`, '-m', `${NAME} ${NEW}`]);
 run('git', ['push', 'origin', `v${NEW}`]);
 console.log(`✓ pushed v${NEW} — release.yml will build and publish to npm`);

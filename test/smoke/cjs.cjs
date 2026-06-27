@@ -3,6 +3,10 @@
 const path = require('path');
 const pkgRoot = path.join(__dirname, '../../');
 
+// Source of truth for the expected version — never hardcode the literal, or the
+// smoke gate blocks every release after this one (release.yml runs smoke before publish).
+const pkg = require(path.join(pkgRoot, 'package.json'));
+
 const Bookshelf = require(path.join(pkgRoot, 'dist/cjs/index.js'));
 // Unwrap default export (SWC CJS interop)
 const BookshelfFn = Bookshelf.default || Bookshelf;
@@ -13,8 +17,8 @@ const db = { name: 'knex', queryBuilder: () => ({ on: () => ({}) }), transaction
 const orm = BookshelfFn(db);
 
 // 1. VERSION check
-if (orm.VERSION !== '2.0.0') {
-  throw new Error('Expected VERSION 2.0.0, got ' + orm.VERSION);
+if (orm.VERSION !== pkg.version) {
+  throw new Error('Expected VERSION ' + pkg.version + ', got ' + orm.VERSION);
 }
 
 // 2. Model.extend + instanceof orm.Model
