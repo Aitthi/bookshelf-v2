@@ -69,7 +69,10 @@ declare namespace Bookshelf {
     set(attribute?: Record<string, unknown>, options?: SetOptions): T;
     set(attribute: string, value?: unknown, options?: SetOptions): T;
     timestamp(options?: TimestampOptions): Record<string, unknown>;
-    toJSON(options?: SerializeOptions): any;
+    // Non-generic `unknown` (not `any`, not `<E>`): a generic method cannot be
+    // overridden by a concrete `override toJSON(): Entity`, but a concrete return
+    // IS assignable to `unknown`, so the consumer override compiles with zero any.
+    toJSON(options?: SerializeOptions): unknown;
     unset(attribute: string): T;
     omit<R extends object>(predicate: (value: unknown, key: string) => boolean): R;
     omit<R extends object>(...attributes: string[]): R;
