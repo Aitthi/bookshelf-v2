@@ -229,4 +229,4 @@ You can call `.asCallback(function(err, resp) {` on any database operation metho
 
 ## Contributing
 
-The project is hosted on [GitHub](https://github.com/bookshelf/bookshelf/). If you want to contribute, please open an issue or submit a pull request there.
+The project is hosted on [GitHub](https://github.com/Aitthi/bookshelf-v2). If you want to contribute, please open an issue or submit a pull request there.
