@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@assetsart/bookshelf':
+        specifier: link:.
+        version: 'link:'
       '@biomejs/biome':
         specifier: ^2.5.1
         version: 2.5.1
