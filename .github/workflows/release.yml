@@ -1,0 +1,75 @@
+name: release
+
+# Publishes the `bookshelfv2` npm package on a `v*` tag. bookshelfv2 is a pure
+# TypeScript package (no native binaries) built to dual ESM/CJS by SWC + tsc, so
+# there is NO per-platform build matrix — one build, one publish.
+#
+# WIRE-ONLY until you tag: nothing publishes on push to main. It does NOT gate on
+# ci.yml — a red CI still publishes once a tag is pushed, so the release SKILL is
+# the gate: only tag after CI is green on main.
+#
+# PREREQUISITE (manual, one-time): an `NPM_TOKEN` repository secret — an npm
+# automation/granular token with publish rights to the `bookshelfv2` name. Without
+# it the publish step fails at auth. (Provenance also needs `id-token: write`,
+# already granted below.)
+#
+# To cut a release:  node scripts/release-bump.mjs <x.y.z> --release  (on main) →
+# this workflow builds (pnpm build) and runs `npm publish` from the tagged commit.
+#
+# `workflow_dispatch` runs build + a publish dry-run (npm publish --dry-run)
+# WITHOUT publishing — use it to validate the package contents before a real tag.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # npm provenance (--provenance)
+
+jobs:
+  publish:
+    name: build & publish to npm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Typecheck + test (release sanity)
+        run: pnpm typecheck && pnpm test
+
+      - name: Build (dual ESM/CJS + types)
+        run: pnpm build
+
+      - name: Smoke-test the built package (ESM + CJS)
+        run: node test/smoke/esm.mjs && node test/smoke/cjs.cjs
+
+      # workflow_dispatch → dry run only (validate package contents, no publish).
+      - name: Publish dry-run (workflow_dispatch)
+        if: github.event_name == 'workflow_dispatch'
+        run: npm publish --dry-run --access public
+
+      # Real publish only on a `v*` tag.
+      - name: Publish to npm
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          # Prerelease (e.g. 2.1.0-beta) → published under the `next` dist-tag, NOT
+          # `latest`, so it never clobbers the stable release users get by default.
+          # Stable (no `-` suffix) → normal `latest`.
+          if [[ "$VERSION" == *-* ]]; then TAG=next; else TAG=latest; fi
+          echo "publishing bookshelfv2@$VERSION under dist-tag '$TAG'"
+          npm publish --provenance --access public --tag "$TAG"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
