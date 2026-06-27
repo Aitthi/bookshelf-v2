@@ -8,14 +8,12 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "import":  { "types": "./dist/types/index.d.ts",  "default": "./dist/esm/index.js" },
+      "require": { "types": "./dist/types/index.d.cts", "default": "./dist/cjs/index.js" }
     },
     "./plugins/*": {
-      "types": "./dist/types/plugins/*.d.ts",
-      "import": "./dist/esm/plugins/*.js",
-      "require": "./dist/cjs/plugins/*.js"
+      "import":  { "types": "./dist/types/plugins/*.d.ts",  "default": "./dist/esm/plugins/*.js" },
+      "require": { "types": "./dist/types/plugins/*.d.cts", "default": "./dist/cjs/plugins/*.js" }
     }
   },
   "scripts": {
@@ -25,10 +23,11 @@
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
-    "build:esm": "swc src -d dist/esm --strip-leading-paths -C module.type=es6",
-    "build:cjs": "swc src -d dist/cjs --strip-leading-paths -C module.type=commonjs",
+    "test:types": "pnpm build && tsc -p test/types/tsconfig.cjs.json",
+    "build:esm": "swc src -d dist/esm --strip-leading-paths -C module.type=es6 --ignore \"**/*.d.cts\"",
+    "build:cjs": "swc src -d dist/cjs --strip-leading-paths -C module.type=commonjs --ignore \"**/*.d.cts\"",
     "build:types": "tsc -p tsconfig.build.json",
-    "build": "node scripts/gen-version.mjs && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && pnpm build:esm && pnpm build:cjs && pnpm build:types && node scripts/fix-dist-pkg.mjs",
+    "build": "node scripts/gen-version.mjs && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && pnpm build:esm && pnpm build:cjs && pnpm build:types && node scripts/copy-types.mjs && node scripts/fix-dist-pkg.mjs",
     "smoke": "pnpm build && node test/smoke/esm.mjs && node test/smoke/cjs.cjs",
     "fix:sqlite3": "node scripts/rebuild-sqlite3.mjs",
     "check": "biome check src test"
@@ -48,6 +47,7 @@
     "active record"
   ],
   "devDependencies": {
+    "@assetsart/bookshelf": "link:.",
     "@biomejs/biome": "^2.5.1",
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.15.43",
