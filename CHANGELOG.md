@@ -4,7 +4,7 @@
 
 #### Breaking changes
 
-- Package renamed to **bookshelfv2**; install with `npm install bookshelfv2`
+- Package renamed to **bookshelfv2** (published on npm as `@assetsart/bookshelf`); install with `npm install @assetsart/bookshelf`
 - Plugins must now be imported by subpath and passed as functions to `.plugin()` — string-based plugin names (e.g. `orm.plugin('virtuals')`) are no longer supported
 - Node.js >= 16 required
 - TypeScript consumers using plugin subpath imports must set `moduleResolution` to `node16`, `nodenext`, or `bundler`
@@ -14,7 +14,7 @@
 - Full TypeScript rewrite — the entire codebase is TypeScript; `.d.ts` declaration files are bundled; no external `@types` package needed
 - Dual ESM + CJS output via `exports` map; both `import` and `require` work without configuration
 - Zero runtime dependencies — bluebird, lodash, inflection, and create-error have all been removed and replaced with internal zero-dependency modules
-- Bundled opt-in tree-shakeable plugins: `bookshelfv2/plugins/virtuals` and `bookshelfv2/plugins/case-converter`
+- Bundled opt-in tree-shakeable plugins: `@assetsart/bookshelf/plugins/virtuals` and `@assetsart/bookshelf/plugins/case-converter`
 - Public ORM API fully preserved — relation methods, lifecycle events, model/collection API, and bluebird-style promise helpers (`.tap()`, `.bind()`, `.map()`, `.return()`, etc.) all behave as before; helpers are provided by the internal `BPromise` native-Promise subclass, not bluebird
 
 #### Tooling

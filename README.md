@@ -8,10 +8,12 @@ bookshelfv2 is a full TypeScript rewrite of the original [Bookshelf.js](https://
 
 ## Installation
 
+> The npm package is published as `@assetsart/bookshelf` (the project name is bookshelfv2).
+
 ```sh
-pnpm add bookshelfv2 knex
+pnpm add @assetsart/bookshelf knex
 # or
-npm install bookshelfv2 knex
+npm install @assetsart/bookshelf knex
 
 # Then add one of the following database drivers:
 npm install pg
@@ -26,7 +28,7 @@ npm install sqlite3
 ### ESM (recommended)
 
 ```js
-import bookshelfv2 from 'bookshelfv2'
+import bookshelfv2 from '@assetsart/bookshelf'
 import knex from 'knex'
 
 const db = knex({
@@ -44,7 +46,7 @@ const User = orm.model('User', {
 ### CommonJS
 
 ```js
-const bookshelfv2 = require('bookshelfv2').default
+const bookshelfv2 = require('@assetsart/bookshelf').default
 const knex = require('knex')
 
 const db = knex({
@@ -65,7 +67,7 @@ A common pattern is to initialise once and re-use the instance:
 
 ```js
 // bookshelf.js (or bookshelf.ts)
-import bookshelfv2 from 'bookshelfv2'
+import bookshelfv2 from '@assetsart/bookshelf'
 import knex from 'knex'
 
 const db = knex(dbConfig)
@@ -84,9 +86,9 @@ const Post = orm.model('Post', {
 Plugins are tree-shakeable and imported by subpath, then passed to `.plugin()`. There is no string-based plugin registration.
 
 ```js
-import bookshelfv2 from 'bookshelfv2'
-import virtuals from 'bookshelfv2/plugins/virtuals'
-import caseConverter from 'bookshelfv2/plugins/case-converter'
+import bookshelfv2 from '@assetsart/bookshelf'
+import virtuals from '@assetsart/bookshelf/plugins/virtuals'
+import caseConverter from '@assetsart/bookshelf/plugins/case-converter'
 import knex from 'knex'
 
 const orm = bookshelfv2(knex(/* ... */))
@@ -99,8 +101,8 @@ orm.plugin(caseConverter)
 
 | Plugin | Import path | Description |
 |---|---|---|
-| Virtuals | `bookshelfv2/plugins/virtuals` | Define virtual (computed) properties on your model. |
-| Case Converter | `bookshelfv2/plugins/case-converter` | Automatically convert between the database's `snake_case` columns and the model's `camelCase` attributes. |
+| Virtuals | `@assetsart/bookshelf/plugins/virtuals` | Define virtual (computed) properties on your model. |
+| Case Converter | `@assetsart/bookshelf/plugins/case-converter` | Automatically convert between the database's `snake_case` columns and the model's `camelCase` attributes. |
 
 > **TypeScript note:** Plugin subpath types require `"moduleResolution": "node16"`, `"nodenext"`, or `"bundler"` in your `tsconfig.json`. They will not resolve under classic `"node"` resolution.
 
@@ -177,8 +179,8 @@ bookshelf.plugin('virtuals')
 bookshelf.plugin('case-converter')
 
 // After (bookshelfv2 2.0)
-import virtuals from 'bookshelfv2/plugins/virtuals'
-import caseConverter from 'bookshelfv2/plugins/case-converter'
+import virtuals from '@assetsart/bookshelf/plugins/virtuals'
+import caseConverter from '@assetsart/bookshelf/plugins/case-converter'
 orm.plugin(virtuals)
 orm.plugin(caseConverter)
 ```
@@ -209,7 +211,7 @@ If you pass `debug: true` in the options object to your `knex` initialise call, 
 
 ```js
 import knex from 'knex'
-import bookshelfv2 from 'bookshelfv2'
+import bookshelfv2 from '@assetsart/bookshelf'
 
 // Turning on debug mode for all queries
 const db = knex({
