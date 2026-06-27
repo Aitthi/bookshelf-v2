@@ -65,10 +65,13 @@
     "knex": ">=3.1.0"
   },
   "author": {
-    "name": "Tim Griesser",
-    "url": "https://github.com/tgriesser"
+    "name": "Assets Art"
   },
   "contributors": [
+    {
+      "name": "Tim Griesser",
+      "url": "https://github.com/tgriesser"
+    },
     {
       "name": "Edward Greve",
       "url": "https://github.com/anyong"
