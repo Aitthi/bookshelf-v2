@@ -66,9 +66,9 @@ declare namespace Bookshelf {
     // IS assignable to `unknown`, so the consumer override compiles with zero any.
     toJSON(options?: SerializeOptions): unknown;
     unset(attribute: string): T;
-    omit<R extends object>(predicate: (value: unknown, key: string) => boolean): R;
+    omit<R extends object>(predicate: (value: unknown, key: string, object?: Record<string, unknown>) => boolean): R;
     omit<R extends object>(...attributes: string[]): R;
-    pick<R extends object>(predicate: (value: unknown, key: string) => boolean): R;
+    pick<R extends object>(predicate: (value: unknown, key: string, object?: Record<string, unknown>) => boolean): R;
     pick<R extends object>(...attributes: string[]): R;
   }
 
