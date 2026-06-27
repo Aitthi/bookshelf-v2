@@ -108,7 +108,7 @@ get<V = unknown>(attribute: string): V;
 set(attribute: string, value?: unknown, options?: SetOptions): this;
 set(attributes: Record<string, unknown>, options?: SetOptions): this;
 attributes: Record<string, unknown>;
-toJSON<E = unknown>(options?: SerializeOptions): E;
+toJSON(options?: SerializeOptions): unknown;   // non-generic: override-compatible with `override toJSON(): Entity`, zero any
 serialize<E = unknown>(options?: SerializeOptions): E;
 ```
 - Zero `any` on the surface.
