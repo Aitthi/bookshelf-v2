@@ -4,8 +4,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        node: [18, 20, 22]
+        # Vitest 4 / Vite 8 (rolldown) require Node >=20.12 (uses node:util styleText).
+        # The published library targets Node >=16 at runtime (ES2022 dist); only the
+        # dev/test toolchain needs 20+.
+        node: [20, 22, 24]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
