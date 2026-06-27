@@ -149,6 +149,49 @@ const user = await new User({ id: 1 })
   .tap((u) => console.log('fetched:', u.id))
 ```
 
+## TypeScript
+
+`@assetsart/bookshelf` ships first-class type declarations and is a drop-in replacement for `@types/bookshelf` (remove that package — it is no longer needed).
+
+Use the self-type pattern (`Model<Self>`) so relations and `this` are typed against your own model:
+
+```ts
+import Bookshelf = require('@assetsart/bookshelf');
+const orm = Bookshelf(knex);
+
+class User extends orm.Model<User> {
+  get tableName() { return 'users'; }
+  posts() { return this.hasMany(Post); }
+}
+
+// `get<V>()` defaults to `unknown`; the type argument is inferred from context:
+const user = await new User().fetch();
+const name: string = user.get('name');          // V inferred as string from the target
+const upper = user.get<string>('name').toUpperCase(); // explicit arg when there is no context
+```
+
+### The `unknown` attribute bag
+
+Attribute accessors (`get()`) intentionally default to `unknown` rather than `any`, so untyped reads cannot silently leak into your code. There are three ways to type a read:
+
+- **Let it infer from context** (most common) — when the result flows into a typed position (a function parameter, a typed field, an annotated variable), the type argument is inferred automatically and **no change is needed**:
+
+  ```ts
+  JSON.parse(model.get('images') || '[]');     // get<string> inferred from JSON.parse
+  const payload: { sku: string } = { sku: model.get('sku') }; // inferred from the field
+  ```
+
+- **Pass a type argument** at sites with no contextual type (a standalone `const`, or a method chained directly on the result):
+
+  ```ts
+  const images = model.get<string>('images');  // would be `unknown` without <string>
+  model.get<string>('name').toUpperCase();
+  ```
+
+- **Override `toJSON(): MyEntity`** to type the serialized object returned by `toJSON()`.
+
+See [`docs/types/get-cast-sites.md`](docs/types/get-cast-sites.md) for a real-consumer migration study and the exact sites that need a type argument.
+
 ## What's new in 2.0 / Migrating from Bookshelf
 
 ### Full TypeScript rewrite
