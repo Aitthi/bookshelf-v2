@@ -67,28 +67,6 @@
   "author": {
     "name": "Assets Art"
   },
-  "contributors": [
-    {
-      "name": "Tim Griesser",
-      "url": "https://github.com/tgriesser"
-    },
-    {
-      "name": "Edward Greve",
-      "url": "https://github.com/anyong"
-    },
-    {
-      "name": "Rhys van der Waerden",
-      "url": "https://github.com/rhys-vdw"
-    },
-    {
-      "name": "Ricardo Graça",
-      "url": "https://github.com/ricardograca"
-    },
-    {
-      "name": "Aitthi",
-      "url": "https://github.com/Aitthi"
-    }
-  ],
   "license": "MIT",
   "readmeFilename": "README.md",
   "engines": {
