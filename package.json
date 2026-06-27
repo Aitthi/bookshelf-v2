@@ -33,7 +33,7 @@
     "fix:sqlite3": "node scripts/rebuild-sqlite3.mjs",
     "check": "biome check src test"
   },
-  "homepage": "https://bookshelfjs.org",
+  "homepage": "https://github.com/Aitthi/bookshelf-v2",
   "repository": {
     "type": "git",
     "url": "https://github.com/Aitthi/bookshelf-v2.git"
@@ -83,6 +83,10 @@
     {
       "name": "Ricardo Graça",
       "url": "https://github.com/ricardograca"
+    },
+    {
+      "name": "Aitthi",
+      "url": "https://github.com/Aitthi"
     }
   ],
   "license": "MIT",
