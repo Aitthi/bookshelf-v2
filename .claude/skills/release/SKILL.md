@@ -5,7 +5,7 @@ description: Cut a bookshelfv2 npm release. Use when the user asks to release, p
 
 # Releasing bookshelfv2
 
-`release.yml` publishes the single `bookshelfv2` npm package on a `v*` tag (pure
+`release.yml` publishes the single `@assetsart/bookshelf` npm package on a `v*` tag (pure
 TypeScript, dual ESM/CJS — no native platform matrix). It **does NOT gate on
 CI** — a red `ci.yml` still publishes once a tag is pushed. So YOU are the gate:
 never tag until CI is green on main.
@@ -97,7 +97,7 @@ gh run watch $(gh run list --workflow=release.yml --limit 1 --json databaseId --
   `npm publish --dry-run` WITHOUT publishing — use it to validate package
   contents (the `files: ["dist"]` allowlist) before the first real `vX.Y.Z` tag.
 - **One-time secret:** an `NPM_TOKEN` repo secret (npm automation/granular token
-  with publish rights to `bookshelfv2`). Without it, publish fails at auth.
+  with publish rights to `@assetsart/bookshelf`). Without it, publish fails at auth.
 - `package.json` ships only `dist` (the `files` allowlist) + README + LICENSE +
   package.json. `pnpm.onlyBuiltDependencies` lets CI build native devDeps
   (sqlite3 etc.) under `--frozen-lockfile`; the published package has zero
