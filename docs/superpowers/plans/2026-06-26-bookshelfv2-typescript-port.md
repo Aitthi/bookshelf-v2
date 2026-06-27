@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Port the `re-bookshelf` ORM (~6,366 lines of JS in `lib/`) to strict TypeScript with zero runtime dependencies, dual ESM/CJS output, bundled opt-in plugins, while preserving the existing public API.
+**Goal:** Port the `bookshelf-v2` ORM (~6,366 lines of JS in `lib/`) to strict TypeScript with zero runtime dependencies, dual ESM/CJS output, bundled opt-in plugins, while preserving the existing public API.
 
 **Architecture:** Keep the original two-layer structure (`base/` framework-agnostic classes + knex-aware top layer). Replace all four runtime deps (`bluebird`, `lodash`, `inflection`, `create-error`) with hand-written `src/internal/*` modules. Public async methods return a hand-written `BPromise` (a native `Promise` subclass that re-adds `.tap/.bind/.map/.return/.spread/.asCallback`) so consumer code keeps working. Port bottom-up, module by module, keeping the existing test suite green as an oracle.
 

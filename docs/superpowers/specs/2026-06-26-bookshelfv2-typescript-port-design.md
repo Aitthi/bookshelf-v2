@@ -2,13 +2,13 @@
 
 **สถานะ:** Design — revised หลัง adversarial subagent review (C1–C4, B1–B5 resolved)
 **วันที่:** 2026-06-26
-**Topic:** Port `re-bookshelf` ORM → `bookshelfv2` (TypeScript strict, zero runtime deps, ESM+CJS, plugin-ready)
+**Topic:** Port `bookshelf-v2` ORM → `bookshelfv2` (TypeScript strict, zero runtime deps, ESM+CJS, plugin-ready)
 
 ---
 
 ## 1. เป้าหมาย & ขอบเขต
 
-Port `re-bookshelf` (fork ของ Bookshelf.js ORM, ~6,366 บรรทัด ใน `lib/`) ให้กลายเป็น library ที่:
+Port `bookshelf-v2` (fork ของ Bookshelf.js ORM, ~6,366 บรรทัด ใน `lib/`) ให้กลายเป็น library ที่:
 
 1. เขียนด้วย **TypeScript** ทั้งหมด, `strict: true`, มี `.d.ts` คุณภาพสูงให้ consumer
 2. **Zero runtime dependencies** — ถอด `bluebird`, `lodash`, `inflection`, `create-error` ออกทั้งหมด
