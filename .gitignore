@@ -7,3 +7,7 @@ tmp
 coverage/
 .jsdoc-temp/
 .nyc_output
+
+.superpowers/
+dist/
+.claude/
