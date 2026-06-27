@@ -10,27 +10,19 @@ export = Bookshelf;
 
 declare function Bookshelf(knex: Knex): Bookshelf;
 
-interface Bookshelf {
+interface Bookshelf extends Bookshelf.Events<any> {
   VERSION: string;
   knex: Knex;
   Model: typeof Bookshelf.Model;
   Collection: typeof Bookshelf.Collection;
+  model(name: string, model?: typeof Bookshelf.Model | object, staticProperties?: object): typeof Bookshelf.Model;
+  plugin(plugin: string | string[] | ((bookshelf: Bookshelf, options?: unknown) => void), options?: unknown): Bookshelf;
+  transaction<T>(callback: (transaction: Knex.Transaction) => PromiseLike<T>): BPromise<T>;
 }
 
 declare namespace Bookshelf {
   type SortOrder = 'ASC' | 'asc' | 'DESC' | 'desc';
   type Relations = string | WithRelatedQuery | (string | WithRelatedQuery)[];
-
-  // Minimal Collection stub (Task 3 replaces it with the full surface).
-  // `query()` overloads are required by the model-definition fixture
-  // (`this.hasMany(...).query(cb)`), matching @types/bookshelf CollectionBase.
-  class Collection<T extends Model<any>> {
-    models: T[];
-    query(): Knex.QueryBuilder;
-    query(callback: (qb: Knex.QueryBuilder) => void): Collection<T>;
-    query(...query: string[]): Collection<T>;
-    query(query: Record<string, unknown>): Collection<T>;
-  }
 
   abstract class Events<T> {
     on(event?: string, callback?: EventFunction<T>, context?: unknown): void;
@@ -209,4 +201,117 @@ declare namespace Bookshelf {
   interface CollectionOptions<T> {
     comparator?: boolean | string | ((a: T, b: T) => number) | undefined;
   }
+
+  type ListIterator<T, R> = (value: T, index: number, collection: T[]) => R;
+  type DictionaryIterator<T, R> = (value: T, key: string, collection: Record<string, T>) => R;
+  type MemoIterator<T, R> = (prev: R, curr: T, index: number, list: T[]) => R;
+  interface Dictionary<T> {
+    [index: string]: T;
+  }
+
+  abstract class CollectionBase<T extends Model<any>> extends Events<T> {
+    length: number;
+    models: T[];
+    constructor(models?: T[], options?: CollectionOptions<T>);
+
+    add(models: T[] | Record<string, unknown>[], options?: CollectionAddOptions): Collection<T>;
+    at(index: number): T;
+    clone(): Collection<T>;
+    fetch(options?: CollectionFetchOptions): BPromise<Collection<T>>;
+    findWhere(match: Record<string, unknown>): T;
+    get(id: unknown): T;
+    invokeThen(name: string, ...args: unknown[]): BPromise<unknown>;
+    parse<E = unknown>(response: E): E;
+    pluck<V = unknown>(attribute: string): V[];
+    pop(): void;
+    push(model: unknown): Collection<T>;
+    reduceThen<R>(iterator: (prev: R, cur: T, idx: number, array: T[]) => R, initialValue: R, context: unknown): BPromise<R>;
+    remove(model: T, options?: EventOptions): T;
+    remove(model: T[], options?: EventOptions): T[];
+    reset(model: unknown[], options?: CollectionAddOptions): T[];
+    serialize<E = unknown>(options?: SerializeOptions): E[];
+    set(models: T[] | Record<string, unknown>[], options?: CollectionSetOptions): Collection<T>;
+    shift(options?: EventOptions): void;
+    slice(begin?: number, end?: number): void;
+    toJSON<E = unknown>(options?: SerializeOptions): E[];
+    unshift(model: unknown, options?: CollectionAddOptions): void;
+    where(match: Record<string, unknown>): Collection<T>;
+    where(
+      key: string,
+      operatorOrValue: string | number | boolean,
+      valueIfOperator?: string | string[] | number | number[] | boolean,
+    ): Collection<T>;
+
+    includes(value: unknown, fromIndex?: number): boolean;
+    countBy(predicate?: ListIterator<T, boolean> | string): Dictionary<number>;
+    every(predicate?: ListIterator<T, boolean> | string): boolean;
+    filter(predicate?: ListIterator<T, boolean> | string): T[];
+    find(predicate?: ListIterator<T, boolean> | string): T;
+    first(): T;
+    forEach(callback?: ListIterator<T, void>): T[];
+    groupBy(predicate?: ListIterator<T, unknown> | string): Dictionary<T[]>;
+    invokeMap(methodName: string | Function, ...args: unknown[]): unknown;
+    isEmpty(): boolean;
+    keys(): string[];
+    last(): T;
+    map<U>(predicate?: ListIterator<T, U> | string): U[];
+    reduce<R>(callback?: MemoIterator<T, R>, accumulator?: R): R;
+    reduceRight<R>(callback?: MemoIterator<T, R>, accumulator?: R): R;
+    reject(predicate?: ListIterator<T, boolean> | string): T[];
+    tail(): T[];
+    some(predicate?: ListIterator<T, boolean> | string): boolean;
+    sortBy(predicate?: ListIterator<T, unknown> | string): T[];
+    toArray(): T[];
+  }
+
+  class Collection<T extends Model<any>> extends CollectionBase<T> {
+    /** @deprecated use TypeScript classes */
+    static extend(prototypeProperties?: object, classProperties?: object): typeof Collection;
+    /** @deprecated use `new` instead. */
+    static forge<T>(attributes?: Record<string, unknown>, options?: ModelOptions): T;
+
+    attach(ids: unknown | unknown[], options?: SyncOptions): BPromise<Collection<T>>;
+    count(column?: string, options?: SyncOptions): BPromise<number | string>;
+    create(model: Record<string, unknown>, options?: CollectionCreateOptions): BPromise<T>;
+    detach(ids: unknown[], options?: SyncOptions): BPromise<unknown>;
+    detach(options?: SyncOptions): BPromise<unknown>;
+    fetchOne(options?: CollectionFetchOneOptions): BPromise<T>;
+    load(relations: Relations, options?: SyncOptions): BPromise<Collection<T>>;
+    orderBy(column: string, order?: SortOrder): Collection<T>;
+
+    query(): Knex.QueryBuilder;
+    query(callback: (qb: Knex.QueryBuilder) => void): Collection<T>;
+    query(...query: string[]): Collection<T>;
+    query(query: Record<string, unknown>): Collection<T>;
+
+    resetQuery(): Collection<T>;
+    through<R extends Model<any>>(interim: ModelSubclass, throughForeignKey?: string, otherKey?: string): Collection<R>;
+    updatePivot(attributes: Record<string, unknown>, options?: PivotOptions): BPromise<number>;
+    withPivot(columns: string[]): Collection<T>;
+
+    static EmptyError: typeof import('./errors.js').EmptyError;
+  }
+
+  interface CollectionAddOptions extends EventOptions {
+    at?: number | undefined;
+    merge?: boolean | undefined;
+  }
+  interface CollectionFetchOptions {
+    require?: boolean | undefined;
+    withRelated?: string | string[] | undefined;
+  }
+  interface CollectionFetchOneOptions {
+    require?: boolean | undefined;
+    columns?: string | string[] | undefined;
+  }
+  interface CollectionSetOptions extends EventOptions {
+    add?: boolean | undefined;
+    remove?: boolean | undefined;
+    merge?: boolean | undefined;
+  }
+  interface PivotOptions {
+    query?: Function | Record<string, unknown> | undefined;
+    require?: boolean | undefined;
+  }
+  interface CollectionCreateOptions extends ModelOptions, SyncOptions, CollectionAddOptions, SaveOptions {}
 }
