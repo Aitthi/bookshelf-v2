@@ -12,6 +12,7 @@ export type Collection<T extends Bookshelf.Model<any>> = Bookshelf.Collection<T>
 export type ModelBase<T extends Bookshelf.Model<any>> = Bookshelf.ModelBase<T>;
 export type CollectionBase<T extends Bookshelf.Model<any>> = Bookshelf.CollectionBase<T>;
 export type Events<T> = Bookshelf.Events<T>;
+export type BPromise<T> = Bookshelf.BPromise<T>;
 export type ModelOptions = Bookshelf.ModelOptions;
 export type FetchOptions = Bookshelf.FetchOptions;
 export type FetchAllOptions = Bookshelf.FetchAllOptions;
