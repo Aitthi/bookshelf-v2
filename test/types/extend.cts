@@ -48,6 +48,8 @@ void u.save(row, {patch: true});
 void u.set(row);
 void u.where(row);
 void u.where('host_expire', new Date()); // value accepts Date/null, not just string|number|boolean
+void u.where(db.knex.raw('MONTH(sent_at)')); // single knex Raw arg
+void u.where(db.knex.raw('MONTH(sent_at)'), 5); // Raw as the key of the multi-arg form
 void _coll.add([row]);
 void _coll.create(row);
 
