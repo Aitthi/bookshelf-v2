@@ -35,3 +35,18 @@ const _attr: string = u.attributes.host_name; // Record<string, any>
 const _id: number = u.id; // id: any
 void _attr;
 void _id;
+
+// Write-side params accept named interfaces (no index signature) — guards the
+// `Record<string, unknown>` → `any` flip on save/where/set/forge/create.
+interface UserRow {
+  id: number;
+  host_name: string;
+}
+declare const row: UserRow;
+void u.save(row);
+void u.save(row, {patch: true});
+void u.set(row);
+void u.where(row);
+void u.where('host_expire', new Date()); // value accepts Date/null, not just string|number|boolean
+void _coll.add([row]);
+void _coll.create(row);

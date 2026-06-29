@@ -49,12 +49,12 @@ declare namespace Bookshelf {
     id: any;
     attributes: Record<string, any>;
 
-    constructor(attributes?: Record<string, unknown>, options?: ModelOptions);
+    constructor(attributes?: Record<string, any>, options?: ModelOptions);
 
     clear(): T;
     clone(): T;
     escape(attribute: string): string;
-    format(attributes: Record<string, unknown>): Record<string, unknown>;
+    format(attributes: Record<string, any>): Record<string, any>;
     get<V = any>(attribute: string): V;
     has(attribute: string): boolean;
     hasChanged(attribute?: string): boolean;
@@ -64,17 +64,17 @@ declare namespace Bookshelf {
     previous<V = any>(attribute: string): V;
     related<R extends Model<any>>(relation: string): R | Collection<R>;
     serialize<E = any>(options?: SerializeOptions): E;
-    set(attribute?: Record<string, unknown>, options?: SetOptions): T;
+    set(attribute?: Record<string, any>, options?: SetOptions): T;
     set(attribute: string, value?: unknown, options?: SetOptions): T;
-    timestamp(options?: TimestampOptions): Record<string, unknown>;
+    timestamp(options?: TimestampOptions): Record<string, any>;
     // `any` for drop-in parity with @types/bookshelf (whose toJSON returned
     // `any`). Non-generic so a concrete `override toJSON(): Entity` can still
     // override it — a concrete return type is assignable to `any`.
     toJSON(options?: SerializeOptions): any;
     unset(attribute: string): T;
-    omit<R extends object>(predicate: (value: unknown, key: string, object?: Record<string, unknown>) => boolean): R;
+    omit<R extends object>(predicate: (value: unknown, key: string, object?: Record<string, any>) => boolean): R;
     omit<R extends object>(...attributes: string[]): R;
-    pick<R extends object>(predicate: (value: unknown, key: string, object?: Record<string, unknown>) => boolean): R;
+    pick<R extends object>(predicate: (value: unknown, key: string, object?: Record<string, any>) => boolean): R;
     pick<R extends object>(...attributes: string[]): R;
   }
 
@@ -89,13 +89,9 @@ declare namespace Bookshelf {
     static extend(prototypeProperties?: object, classProperties?: object): typeof Model;
     static fetchAll<T extends Model<any>>(): BPromise<Collection<T>>;
     /** @deprecated use `new` instead. */
-    static forge<T>(attributes?: Record<string, unknown>, options?: ModelOptions): T;
-    static where<T>(properties: Record<string, unknown>): T;
-    static where<T>(
-      key: string,
-      operatorOrValue: string | number | boolean,
-      valueIfOperator?: string | string[] | number | number[] | boolean,
-    ): T;
+    static forge<T>(attributes?: Record<string, any>, options?: ModelOptions): T;
+    static where<T>(properties: Record<string, any>): T;
+    static where<T>(key: string, operatorOrValue: any, valueIfOperator?: any): T;
 
     belongsTo<R extends Model<any>>(target: { new (...args: any[]): R }, foreignKey?: string, foreignKeyTarget?: string): R;
     belongsToMany<R extends Model<any>>(
@@ -123,12 +119,12 @@ declare namespace Bookshelf {
     query(): Knex.QueryBuilder;
     query(callback: (qb: Knex.QueryBuilder) => void): T;
     query(...query: string[]): T;
-    query(query: Record<string, unknown>): T;
+    query(query: Record<string, any>): T;
 
     refresh(options?: FetchOptions): BPromise<T>;
     resetQuery(): T;
-    save(key?: string, val?: unknown, options?: SaveOptions): BPromise<T>;
-    save(attrs?: Record<string, unknown>, options?: SaveOptions): BPromise<T>;
+    save(key?: string, val?: any, options?: SaveOptions): BPromise<T>;
+    save(attrs?: Record<string, any>, options?: SaveOptions): BPromise<T>;
     through<R extends Model<any>>(
       interim: ModelSubclass,
       throughForeignKey?: string,
@@ -136,12 +132,8 @@ declare namespace Bookshelf {
       throughForeignKeyTarget?: string,
       otherKeyTarget?: string,
     ): R;
-    where(properties: Record<string, unknown>): T;
-    where(
-      key: string,
-      operatorOrValue: string | number | boolean,
-      valueIfOperator?: string | string[] | number | number[] | boolean,
-    ): T;
+    where(properties: Record<string, any>): T;
+    where(key: string, operatorOrValue: any, valueIfOperator?: any): T;
 
     static NotFoundError: typeof import('./errors.js').NotFoundError;
     static NoRowsUpdatedError: typeof import('./errors.js').NoRowsUpdatedError;
@@ -202,7 +194,7 @@ declare namespace Bookshelf {
     silent?: boolean | undefined;
   }
   interface EventFunction<T> {
-    (model: T, attrs: Record<string, unknown>, options: Record<string, unknown>): BPromise<unknown> | void;
+    (model: T, attrs: Record<string, any>, options: Record<string, any>): BPromise<unknown> | void;
   }
   interface CollectionOptions<T> {
     comparator?: boolean | string | ((a: T, b: T) => number) | undefined;
@@ -220,11 +212,11 @@ declare namespace Bookshelf {
     models: T[];
     constructor(models?: T[], options?: CollectionOptions<T>);
 
-    add(models: T[] | Record<string, unknown>[], options?: CollectionAddOptions): Collection<T>;
+    add(models: T[] | Record<string, any>[], options?: CollectionAddOptions): Collection<T>;
     at(index: number): T;
     clone(): Collection<T>;
     fetch(options?: CollectionFetchOptions): BPromise<Collection<T>>;
-    findWhere(match: Record<string, unknown>): T;
+    findWhere(match: Record<string, any>): T;
     get(id: unknown): T;
     invokeThen(name: string, ...args: unknown[]): BPromise<unknown>;
     parse<E = unknown>(response: E): E;
@@ -236,17 +228,13 @@ declare namespace Bookshelf {
     remove(model: T[], options?: EventOptions): T[];
     reset(model: unknown[], options?: CollectionAddOptions): T[];
     serialize<E = unknown>(options?: SerializeOptions): E[];
-    set(models: T[] | Record<string, unknown>[], options?: CollectionSetOptions): Collection<T>;
+    set(models: T[] | Record<string, any>[], options?: CollectionSetOptions): Collection<T>;
     shift(options?: EventOptions): void;
     slice(begin?: number, end?: number): void;
     toJSON<E = any>(options?: SerializeOptions): E[];
     unshift(model: unknown, options?: CollectionAddOptions): void;
-    where(match: Record<string, unknown>): Collection<T>;
-    where(
-      key: string,
-      operatorOrValue: string | number | boolean,
-      valueIfOperator?: string | string[] | number | number[] | boolean,
-    ): Collection<T>;
+    where(match: Record<string, any>): Collection<T>;
+    where(key: string, operatorOrValue: any, valueIfOperator?: any): Collection<T>;
 
     includes(value: unknown, fromIndex?: number): boolean;
     countBy(predicate?: ListIterator<T, boolean> | string): Dictionary<number>;
@@ -274,11 +262,11 @@ declare namespace Bookshelf {
     /** @deprecated use TypeScript classes */
     static extend(prototypeProperties?: object, classProperties?: object): typeof Collection;
     /** @deprecated use `new` instead. */
-    static forge<T>(attributes?: Record<string, unknown>, options?: ModelOptions): T;
+    static forge<T>(attributes?: Record<string, any>, options?: ModelOptions): T;
 
     attach(ids: unknown | unknown[], options?: SyncOptions): BPromise<Collection<T>>;
     count(column?: string, options?: SyncOptions): BPromise<number | string>;
-    create(model: Record<string, unknown>, options?: CollectionCreateOptions): BPromise<T>;
+    create(model: Record<string, any>, options?: CollectionCreateOptions): BPromise<T>;
     detach(ids: unknown[], options?: SyncOptions): BPromise<unknown>;
     detach(options?: SyncOptions): BPromise<unknown>;
     fetchOne(options?: CollectionFetchOneOptions): BPromise<T>;
@@ -288,11 +276,11 @@ declare namespace Bookshelf {
     query(): Knex.QueryBuilder;
     query(callback: (qb: Knex.QueryBuilder) => void): Collection<T>;
     query(...query: string[]): Collection<T>;
-    query(query: Record<string, unknown>): Collection<T>;
+    query(query: Record<string, any>): Collection<T>;
 
     resetQuery(): Collection<T>;
     through<R extends Model<any>>(interim: ModelSubclass, throughForeignKey?: string, otherKey?: string): Collection<R>;
-    updatePivot(attributes: Record<string, unknown>, options?: PivotOptions): BPromise<number>;
+    updatePivot(attributes: Record<string, any>, options?: PivotOptions): BPromise<number>;
     withPivot(columns: string[]): Collection<T>;
 
     static EmptyError: typeof import('./errors.js').EmptyError;
@@ -316,7 +304,7 @@ declare namespace Bookshelf {
     merge?: boolean | undefined;
   }
   interface PivotOptions {
-    query?: Function | Record<string, unknown> | undefined;
+    query?: Function | Record<string, any> | undefined;
     require?: boolean | undefined;
   }
   interface CollectionCreateOptions extends ModelOptions, SyncOptions, CollectionAddOptions, SaveOptions {}
