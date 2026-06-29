@@ -29,6 +29,13 @@
     }
   },
   "types": "./dist/types/index.d.cts",
+  "typesVersions": {
+    "*": {
+      "plugins/*": [
+        "./dist/types/plugins/*.d.cts"
+      ]
+    }
+  },
   "scripts": {
     "format": "biome format --write src test",
     "lint": "biome lint src test",
@@ -36,7 +43,7 @@
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
-    "test:types": "pnpm build && tsc -p test/types/tsconfig.cjs.json && tsc -p test/types/tsconfig.esm.json",
+    "test:types": "pnpm build && tsc -p test/types/tsconfig.cjs.json && tsc -p test/types/tsconfig.esm.json && tsc -p test/types/tsconfig.classic.json",
     "attw": "pnpm build && attw --pack .",
     "build:esm": "swc src -d dist/esm --strip-leading-paths -C module.type=es6 --ignore \"src/types/**\"",
     "build:cjs": "swc src -d dist/cjs --strip-leading-paths -C module.type=commonjs --ignore \"src/types/**\"",
