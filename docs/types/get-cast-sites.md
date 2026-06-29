@@ -1,5 +1,10 @@
 # get()-cast sites (unknown attribute bag)
 
+> **Historical (≤ 2.2.1).** The `unknown`-default attribute bag described here was
+> reverted to `any` in 2.2.2 for drop-in compatibility with `@types/bookshelf`. The
+> generic escape hatch (`get<V>`, `toJSON<E>`) remains, so the analysis below is still
+> useful if you opt back into strict typing. See the README "attribute bag" section.
+
 `@assetsart/bookshelf` types attribute reads as `get<V = unknown>(attribute: string): V`
 instead of the old `@types/bookshelf` `get(attribute: string): any`. This means an
 untyped read produces `unknown` (not `any`), so it cannot silently leak into typed code.
