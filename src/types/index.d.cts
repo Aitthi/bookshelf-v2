@@ -21,6 +21,12 @@ interface Bookshelf extends Bookshelf.Events<any> {
 }
 
 declare namespace Bookshelf {
+  // Public promise type so consumers can name the return type of async ORM
+  // methods (`fetch`, `save`, `fetchPage`, …). Declared as an inline-import
+  // alias rather than a value import — the `export =` form above forbids
+  // mixing a value import (see the header comment).
+  type BPromise<T> = import('./internal/promise.js').BPromise<T>;
+
   type SortOrder = 'ASC' | 'asc' | 'DESC' | 'desc';
   type Relations = string | WithRelatedQuery | (string | WithRelatedQuery)[];
 

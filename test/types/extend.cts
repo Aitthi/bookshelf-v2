@@ -16,3 +16,8 @@ type M = Bookshelf.Model<User>;
 
 const u = new User();
 const _t: string = u.tableName;
+
+// Public BPromise type — namespace-qualified (CJS).
+type P = Bookshelf.BPromise<User>;
+const _p: P = u.fetch();
+void _p;
