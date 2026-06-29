@@ -90,8 +90,8 @@ declare namespace Bookshelf {
     static fetchAll<T extends Model<any>>(): BPromise<Collection<T>>;
     /** @deprecated use `new` instead. */
     static forge<T>(attributes?: Record<string, any>, options?: ModelOptions): T;
-    static where<T>(properties: Record<string, any>): T;
-    static where<T>(key: string, operatorOrValue: any, valueIfOperator?: any): T;
+    static where<T>(properties: Record<string, any> | Knex.Raw): T;
+    static where<T>(key: string | Knex.Raw, operatorOrValue: any, valueIfOperator?: any): T;
 
     belongsTo<R extends Model<any>>(target: { new (...args: any[]): R }, foreignKey?: string, foreignKeyTarget?: string): R;
     belongsToMany<R extends Model<any>>(
@@ -132,8 +132,8 @@ declare namespace Bookshelf {
       throughForeignKeyTarget?: string,
       otherKeyTarget?: string,
     ): R;
-    where(properties: Record<string, any>): T;
-    where(key: string, operatorOrValue: any, valueIfOperator?: any): T;
+    where(properties: Record<string, any> | Knex.Raw): T;
+    where(key: string | Knex.Raw, operatorOrValue: any, valueIfOperator?: any): T;
 
     static NotFoundError: typeof import('./errors.js').NotFoundError;
     static NoRowsUpdatedError: typeof import('./errors.js').NoRowsUpdatedError;
@@ -233,8 +233,8 @@ declare namespace Bookshelf {
     slice(begin?: number, end?: number): void;
     toJSON<E = any>(options?: SerializeOptions): E[];
     unshift(model: unknown, options?: CollectionAddOptions): void;
-    where(match: Record<string, any>): Collection<T>;
-    where(key: string, operatorOrValue: any, valueIfOperator?: any): Collection<T>;
+    where(match: Record<string, any> | Knex.Raw): Collection<T>;
+    where(key: string | Knex.Raw, operatorOrValue: any, valueIfOperator?: any): Collection<T>;
 
     includes(value: unknown, fromIndex?: number): boolean;
     countBy(predicate?: ListIterator<T, boolean> | string): Dictionary<number>;
