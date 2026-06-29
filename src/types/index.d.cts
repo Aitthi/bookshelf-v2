@@ -147,7 +147,7 @@ declare namespace Bookshelf {
   }
   interface FetchOptions extends SyncOptions {
     require?: boolean | undefined;
-    columns?: string | string[] | undefined;
+    columns?: string | Knex.Raw | (string | Knex.Raw)[] | undefined;
     withRelated?: (string | WithRelatedQuery)[] | undefined;
   }
   interface WithRelatedQuery {
@@ -296,7 +296,7 @@ declare namespace Bookshelf {
   }
   interface CollectionFetchOneOptions {
     require?: boolean | undefined;
-    columns?: string | string[] | undefined;
+    columns?: string | Knex.Raw | (string | Knex.Raw)[] | undefined;
   }
   interface CollectionSetOptions extends EventOptions {
     add?: boolean | undefined;

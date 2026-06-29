@@ -50,3 +50,8 @@ void u.where(row);
 void u.where('host_expire', new Date()); // value accepts Date/null, not just string|number|boolean
 void _coll.add([row]);
 void _coll.create(row);
+
+// `columns` fetch option accepts knex Raw (not just string), e.g.
+// fetchAll({ columns: [db.knex.raw('count(*) as "c"')] }).
+void u.fetchAll({columns: [db.knex.raw('count(id) as "count"'), 'name']});
+void u.fetchPage({columns: db.knex.raw('count(id) as "count"'), page: 1});
