@@ -46,8 +46,8 @@ declare namespace Bookshelf {
   interface ModelBase<T extends Model<any>> extends IModelBase {}
   abstract class ModelBase<T extends Model<any>> extends Events<T | Collection<T>> {
     idAttribute: string;
-    id: unknown;
-    attributes: Record<string, unknown>;
+    id: any;
+    attributes: Record<string, any>;
 
     constructor(attributes?: Record<string, unknown>, options?: ModelOptions);
 
@@ -55,22 +55,22 @@ declare namespace Bookshelf {
     clone(): T;
     escape(attribute: string): string;
     format(attributes: Record<string, unknown>): Record<string, unknown>;
-    get<V = unknown>(attribute: string): V;
+    get<V = any>(attribute: string): V;
     has(attribute: string): boolean;
     hasChanged(attribute?: string): boolean;
     isNew(): boolean;
     parse(response: object): object;
-    previousAttributes<E = unknown>(): E;
-    previous<V = unknown>(attribute: string): V;
+    previousAttributes<E = any>(): E;
+    previous<V = any>(attribute: string): V;
     related<R extends Model<any>>(relation: string): R | Collection<R>;
-    serialize<E = unknown>(options?: SerializeOptions): E;
+    serialize<E = any>(options?: SerializeOptions): E;
     set(attribute?: Record<string, unknown>, options?: SetOptions): T;
     set(attribute: string, value?: unknown, options?: SetOptions): T;
     timestamp(options?: TimestampOptions): Record<string, unknown>;
-    // Non-generic `unknown` (not `any`, not `<E>`): a generic method cannot be
-    // overridden by a concrete `override toJSON(): Entity`, but a concrete return
-    // IS assignable to `unknown`, so the consumer override compiles with zero any.
-    toJSON(options?: SerializeOptions): unknown;
+    // `any` for drop-in parity with @types/bookshelf (whose toJSON returned
+    // `any`). Non-generic so a concrete `override toJSON(): Entity` can still
+    // override it — a concrete return type is assignable to `any`.
+    toJSON(options?: SerializeOptions): any;
     unset(attribute: string): T;
     omit<R extends object>(predicate: (value: unknown, key: string, object?: Record<string, unknown>) => boolean): R;
     omit<R extends object>(...attributes: string[]): R;
@@ -239,7 +239,7 @@ declare namespace Bookshelf {
     set(models: T[] | Record<string, unknown>[], options?: CollectionSetOptions): Collection<T>;
     shift(options?: EventOptions): void;
     slice(begin?: number, end?: number): void;
-    toJSON<E = unknown>(options?: SerializeOptions): E[];
+    toJSON<E = any>(options?: SerializeOptions): E[];
     unshift(model: unknown, options?: CollectionAddOptions): void;
     where(match: Record<string, unknown>): Collection<T>;
     where(

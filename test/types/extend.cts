@@ -21,3 +21,17 @@ const _t: string = u.tableName;
 type P = Bookshelf.BPromise<User>;
 const _p: P = u.fetch();
 void _p;
+
+// Attribute bag defaults to `any` (drop-in parity) — these lines compile only
+// because the default is `any`, NOT `unknown`. They guard against a regression
+// back to the unknown-default bag.
+const _num: number = u.get('count'); // get<V = any> → assignable to number
+void _num;
+declare const _coll: Bookshelf.Collection<User>;
+for (const row of _coll.toJSON()) {
+  void row.anything; // toJSON<E = any> → E[] of any; property access is allowed
+}
+const _attr: string = u.attributes.host_name; // Record<string, any>
+const _id: number = u.id; // id: any
+void _attr;
+void _id;

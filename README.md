@@ -197,33 +197,26 @@ class User extends orm.Model<User> {
   posts() { return this.hasMany(Post); }
 }
 
-// `get<V>()` defaults to `unknown`; the type argument is inferred from context:
+// `get<V>()` defaults to `any` (drop-in parity), with a generic escape hatch:
 const user = await new User().fetch();
-const name: string = user.get('name');          // V inferred as string from the target
-const upper = user.get<string>('name').toUpperCase(); // explicit arg when there is no context
+const name = user.get('name');                  // any — works without annotation
+const len = user.get<string>('name').length;    // pass <V> to type the read
 ```
 
-### The `unknown` attribute bag
+### The attribute bag
 
-Attribute accessors (`get()`) intentionally default to `unknown` rather than `any`, so untyped reads cannot silently leak into your code. There are three ways to type a read:
+The attribute accessors — `get()`, `attributes`, `id`, `toJSON()`, `serialize()`, `previous()` — default to `any`, matching `@types/bookshelf` so existing code is a drop-in. Untyped reads flow freely, and you opt into stricter typing where you want it:
 
-- **Let it infer from context** (most common) — when the result flows into a typed position (a function parameter, a typed field, an annotated variable), the type argument is inferred automatically and **no change is needed**:
-
-  ```ts
-  JSON.parse(model.get('images') || '[]');     // get<string> inferred from JSON.parse
-  const payload: { sku: string } = { sku: model.get('sku') }; // inferred from the field
-  ```
-
-- **Pass a type argument** at sites with no contextual type (a standalone `const`, or a method chained directly on the result):
+- **Pass a type argument** to a read accessor:
 
   ```ts
-  const images = model.get<string>('images');  // would be `unknown` without <string>
-  model.get<string>('name').toUpperCase();
+  const images = model.get<string>('images');   // string
+  const rows = collection.toJSON<MyRow>();       // MyRow[]
   ```
 
-- **Override `toJSON(): MyEntity`** to type the serialized object returned by `toJSON()`.
+- **Override `toJSON(): MyEntity`** to type the serialized object returned by `toJSON()` for a given model.
 
-See [`docs/types/get-cast-sites.md`](docs/types/get-cast-sites.md) for a real-consumer migration study and the exact sites that need a type argument.
+> Earlier releases (≤ 2.2.1) defaulted these accessors to `unknown`. That was reverted to `any` in 2.2.2 for drop-in compatibility; the generic type arguments (`get<V>`, `toJSON<E>`, …) remain, so opting back into strict typing is per-call.
 
 ### The `BPromise` return type
 
