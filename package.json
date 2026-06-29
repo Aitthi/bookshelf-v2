@@ -1,6 +1,6 @@
 {
   "name": "@assetsart/bookshelf",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "type": "module",
   "description": "A lightweight ORM for PostgreSQL, MySQL, and SQLite3",
   "files": [
