@@ -107,7 +107,7 @@ orm.plugin(jsonColumns)
 | Case Converter | `@assetsart/bookshelf/plugins/case-converter` | Automatically convert between the database's `snake_case` columns and the model's `camelCase` attributes. |
 | JSON Columns | `@assetsart/bookshelf/plugins/json-columns` | Transparently serialize/deserialize columns holding JSON. Declare them via a static `jsonColumns` array on the model. |
 
-> **TypeScript note:** Plugin subpath types require `"moduleResolution": "node16"`, `"nodenext"`, or `"bundler"` in your `tsconfig.json`. They will not resolve under classic `"node"` resolution.
+> **TypeScript note:** Plugin subpaths resolve under `"moduleResolution": "node16"`, `"nodenext"`, and `"bundler"` (via the package `exports` map) and also under classic `"node"` / `"node10"` resolution (via a `typesVersions` fallback) — so no `tsconfig.json` change is required for existing CommonJS projects.
 
 ## Examples
 
@@ -288,7 +288,7 @@ The `pagination` plugin (and the `bookshelf-page` plugin it originated from) has
 
 ### TypeScript moduleResolution for plugins
 
-If you use TypeScript and import plugins, your `tsconfig.json` must use `"moduleResolution": "node16"`, `"nodenext"`, or `"bundler"`. The `./plugins/*` subpath exports do not resolve under `"node"` (classic) resolution.
+Plugin subpaths (`@assetsart/bookshelf/plugins/*`) resolve under `"moduleResolution": "node16"`, `"nodenext"`, and `"bundler"` (through the package `exports` map). For existing CommonJS projects still on classic `"node"` / `"node10"` resolution — which ignores `exports` — a `typesVersions` fallback maps the same subpaths to their declaration files, so the imports type-check without any `tsconfig.json` change. (At runtime, Node honours the `exports` map regardless of the TypeScript setting.)
 
 ### Node.js version requirement
 
