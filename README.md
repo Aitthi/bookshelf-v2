@@ -89,12 +89,14 @@ Plugins are tree-shakeable and imported by subpath, then passed to `.plugin()`. 
 import bookshelfv2 from '@assetsart/bookshelf'
 import virtuals from '@assetsart/bookshelf/plugins/virtuals'
 import caseConverter from '@assetsart/bookshelf/plugins/case-converter'
+import jsonColumns from '@assetsart/bookshelf/plugins/json-columns'
 import knex from 'knex'
 
 const orm = bookshelfv2(knex(/* ... */))
 
 orm.plugin(virtuals)
 orm.plugin(caseConverter)
+orm.plugin(jsonColumns)
 ```
 
 ### Bundled plugins
@@ -103,6 +105,7 @@ orm.plugin(caseConverter)
 |---|---|---|
 | Virtuals | `@assetsart/bookshelf/plugins/virtuals` | Define virtual (computed) properties on your model. |
 | Case Converter | `@assetsart/bookshelf/plugins/case-converter` | Automatically convert between the database's `snake_case` columns and the model's `camelCase` attributes. |
+| JSON Columns | `@assetsart/bookshelf/plugins/json-columns` | Transparently serialize/deserialize columns holding JSON. Declare them via a static `jsonColumns` array on the model. |
 
 > **TypeScript note:** Plugin subpath types require `"moduleResolution": "node16"`, `"nodenext"`, or `"bundler"` in your `tsconfig.json`. They will not resolve under classic `"node"` resolution.
 
@@ -138,6 +141,36 @@ const Tag = orm.model('Tag', {
 const user = await new User({ id: 1 }).fetch({ withRelated: ['posts.tags'] })
 console.log(user.related('posts').toJSON())
 ```
+
+### Pagination
+
+`fetchPage()` is built in — there is no separate pagination plugin to install. It is available on both models and collections, and accepts **either** `page` + `pageSize` **or** `limit` + `offset`. Any other `fetchAll` options (`withRelated`, `columns`, etc.) are passed through.
+
+```js
+// page / pageSize form (defaults: page 1, pageSize 10)
+const result = await Post.forge().fetchPage({
+  page: 2,
+  pageSize: 15,
+  withRelated: ['tags'],
+})
+
+console.log(result.toJSON())        // the page of models
+console.log(result.pagination)
+// {
+//   rowCount: 53,  // total rows matching the query, before pagination
+//   pageCount: 4,  // total number of pages
+//   page: 2,       // the requested page
+//   pageSize: 15,  // the requested page size
+// }
+
+// limit / offset form — pagination metadata is { offset, limit, rowCount, pageCount }
+const slice = await Post.forge().fetchPage({ limit: 20, offset: 40 })
+
+// Skip the extra COUNT query when you don't need totals (no rowCount / pageCount):
+const fast = await Post.forge().fetchPage({ page: 1, pageSize: 25, disableCount: true })
+```
+
+In TypeScript the return type is `Collection<T> & Pagination`, so `result.pagination` is fully typed (`FetchPageOptions` / `Pagination` are exported from the package).
 
 ### Promise chaining
 
@@ -192,6 +225,27 @@ Attribute accessors (`get()`) intentionally default to `unknown` rather than `an
 
 See [`docs/types/get-cast-sites.md`](docs/types/get-cast-sites.md) for a real-consumer migration study and the exact sites that need a type argument.
 
+### The `BPromise` return type
+
+Every async ORM method returns a `BPromise<T>` (the bluebird-style native `Promise` subclass). The type is exported so you can name it in your own signatures:
+
+```ts
+// ESM — named import
+import type { BPromise } from '@assetsart/bookshelf';
+
+function loadUser(id: number): BPromise<User> {
+  return new User({ id }).fetch();
+}
+```
+
+```ts
+// CJS — namespace-qualified
+import Bookshelf = require('@assetsart/bookshelf');
+type UserResult = Bookshelf.BPromise<User>;
+```
+
+> This exposes the **type** only. You rarely need to name it — method returns are already inferred as `BPromise<T>` — but it is available for explicit annotations and helper signatures.
+
 ## What's new in 2.0 / Migrating from Bookshelf
 
 ### Full TypeScript rewrite
@@ -227,6 +281,10 @@ import caseConverter from '@assetsart/bookshelf/plugins/case-converter'
 orm.plugin(virtuals)
 orm.plugin(caseConverter)
 ```
+
+### Pagination is built in
+
+The `pagination` plugin (and the `bookshelf-page` plugin it originated from) has been moved into core. Remove any `orm.plugin('pagination')` / `orm.plugin(require('bookshelf-page'))` calls and use [`fetchPage()`](#pagination) directly — the options and the returned `pagination` metadata are unchanged.
 
 ### TypeScript moduleResolution for plugins
 
