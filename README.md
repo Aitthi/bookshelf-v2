@@ -205,7 +205,7 @@ const len = user.get<string>('name').length;    // pass <V> to type the read
 
 ### The attribute bag
 
-The attribute accessors — `get()`, `attributes`, `id`, `toJSON()`, `serialize()`, `previous()` — default to `any`, matching `@types/bookshelf` so existing code is a drop-in. Untyped reads flow freely, and you opt into stricter typing where you want it:
+The attribute accessors — `get()`, `attributes`, `id`, `toJSON()`, `serialize()`, `previous()` — default to `any`, matching `@types/bookshelf` so existing code is a drop-in. The write-side methods that take attribute objects — `save()`, `set()`, `where()`, `query()`, `create()`, `add()`, the constructor, and `forge()` — accept `Record<string, any>`, so you can pass your own entity interfaces directly (a named `interface` without an index signature is **not** assignable to `Record<string, unknown>`, which is why these use `any`). Untyped reads flow freely, and you opt into stricter typing where you want it:
 
 - **Pass a type argument** to a read accessor:
 
